@@ -1,0 +1,40 @@
+<form [formGroup]="recordForm" (ngSubmit)="save()" class="row g-3 marginTop10">
+    
+    <div class="input-group">
+        <select class="form-select text-center" formControlName="departmentId">
+            <option value=0 disabled>Select Department</option>
+            <option *ngFor="let dep of departments" [value]="dep.id">
+                {{dep.name}}
+            </option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label class="input-group-text" for="description"><i class="bi bi-info-square"></i></label>
+        <input type="text" class="form-control"   placeholder="Description" formControlName="descricao"/>     
+    </div>
+    <div class="form-text text-danger" *ngIf="recordForm.get('descricao')?.invalid && recordForm.get('descricao')?.touched">
+        Descrição é obrigatória (Mínimo 3 caracteres)
+    </div> 
+
+    <div class="input-group">
+        <label class="input-group-text" for="amount"><i class="bi bi-currency-euro"></i></label>
+        <input type="text" class="form-control" placeholder="Amount" formControlName="amount" maxlength="18"/>
+    </div>
+    <div class="form-text text-danger" *ngIf="recordForm.get('amount')?.invalid && recordForm.get('amount')?.touched">
+        Amount é obrigatório e deve ser maior que 0
+    </div>
+
+    <div class="input-group">
+        <label class="input-group-text" for="date"><i class="bi bi-calendar2-date"></i></label>        
+        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="date" [dropSpecialCharacters]="false"/>
+    </div>
+    <div class="form-text text-danger" *ngIf="recordForm.get('date')?.invalid && recordForm.get('date')?.touched">
+        A data é obrigatória
+    </div>
+
+    <div class="gap-3">
+        <button type="submit" [disabled]="recordForm.invalid" class="btn btn-outline-primary float-end">Salvar</button>  
+        <button type="submit" class="btn btn-outline-danger float-end mr10">Cancelar</button>              
+    </div>
+</form>
