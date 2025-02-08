@@ -20,3 +20,8 @@ a{
 .circle{
     border-radius: 50px;
 }
+
+
+.fade, .show{
+    transition: all 1.5s ease-in-out !important;
+  }
