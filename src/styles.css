@@ -16,3 +16,7 @@
 a{
     margin-right: 8px;
 }
+
+.circle{
+    border-radius: 50px;
+}
