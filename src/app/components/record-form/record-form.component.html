@@ -3,7 +3,6 @@
 </div>
 
 <form [formGroup]="recordForm" (ngSubmit)="save()" class="row g-3 marginTop10">
-    
     <div class="input-group">
         <select class="form-select text-center" formControlName="departmentId">
             <option value=0 disabled>Select Department</option>
@@ -12,6 +11,34 @@
             </option>
         </select>
     </div>
+
+    <div>
+        <div class="form-check form-check-inline" *ngFor="let type of recordTypes">
+            <input type="radio" class="form-check-input" name="recordType" [id]="type.name" formControlName="recordType" [value]=type.id>
+            <label class="form-check-label" [for]="type.name">{{type.name}}</label>
+        </div>
+    </div>
+
+    <div class="input-group" *ngIf="recordForm.get('recordType')?.value == recordTypeRecurring">
+        <select class="form-select text-center" formControlName="recurringType">
+            <option value="-1">Select Recurring type</option>
+            <option *ngFor="let type of recurringTypes" [value]=type.id>
+                {{type.name}}
+            </option>
+        </select>
+    </div>
+
+    <div class="input-group" *ngIf="recordForm.get('recordType')?.value == recordTypeRecurring">        
+        <select class="form-select text-center" formControlName="initialMonth">
+            <option value=-1>Select the month for Recurring expense init</option>
+            <option *ngFor="let month of months" [value]=month.id>
+                {{month.name}}
+            </option>
+        </select>
+        <input type="number" class="form-control"   placeholder="Set number of installments" formControlName="replicaCount" *ngIf="recordForm.get('recurringType')?.value == 1"/>   
+    </div> 
+    
+
 
     <div class="input-group">
         <label class="input-group-text" for="description"><i class="bi bi-info-square"></i></label>
@@ -34,7 +61,7 @@
         <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="date" [dropSpecialCharacters]="false"/>
     </div>
     <div class="form-text text-danger" *ngIf="recordForm.get('date')?.invalid && recordForm.get('date')?.touched">
-        Mandatory Field, date format requirede: dd/MM/YYYY e.g: {{currentDate}}
+        Invalid Date format. Date format requirede: dd/MM/YYYY e.g: {{currentDate}}
     </div>
 
     <div class="gap-3">

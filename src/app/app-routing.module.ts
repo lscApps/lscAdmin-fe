@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EntriesComponent } from './components/entries/entries.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { RercordFormComponent } from './components/record-form/record-form.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/entries', pathMatch: 'full' },
-  { path: 'entries', component: EntriesComponent },
-  { path: 'expenses/:type', component: ExpensesComponent },
+  { path: '', redirectTo: '/records', pathMatch: 'full' },
+  { path: 'records', component: RercordFormComponent },
+  { path: 'reports', component: ReportsComponent },
 ];
 
 @NgModule({

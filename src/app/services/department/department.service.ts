@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Department } from '../../models/department';
+import { SelectItem } from '../../models/selectItem';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class DepartmentService {
   constructor() { }
 
   //TODO: invoke from API
-  getDepartments(): Department[]{
+  getDepartments(): SelectItem[]{
     return [
       {id:1, name: 'Admin'},
       {id:2, name: 'Kitchen'},

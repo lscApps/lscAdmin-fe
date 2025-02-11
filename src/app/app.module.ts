@@ -4,25 +4,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { EntriesComponent } from './components/entries/entries.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
-import { InsertionFormComponent } from './components/standalones/insertion-form/insertion-form.component';
+import { ReportsComponent } from './components/reports/reports.component';
 import { UpperCasePipe } from '@angular/common';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { TitlePageComponent } from './components/standalones/title-page/title-page.component';
+import { TitlePageComponent } from './components/title-page/title-page.component';
+import { RercordFormComponent } from './components/record-form/record-form.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    EntriesComponent,
-    ExpensesComponent
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    InsertionFormComponent,
+    RercordFormComponent,
     TitlePageComponent,
     UpperCasePipe,
     NgxMaskDirective, 

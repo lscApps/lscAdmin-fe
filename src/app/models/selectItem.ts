@@ -1,4 +1,4 @@
-export interface Department{
+export interface SelectItem {
     id:number,
     name:string
 }
