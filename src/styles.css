@@ -22,10 +22,7 @@ a{
 }
 
 
-.fade, .show{
-    transition: all 1.5s ease-in-out !important;
-  }
-
-.w100{
-    width: 100%;
+.show{
+    transition: all 1.0s ease-in-out !important;
 }
+

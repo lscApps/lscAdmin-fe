@@ -10,16 +10,10 @@ export class RecordService {
   constructor() { }
 
 
-  save(record:Record){
-    if(record.id == undefined){
-      record.id = Math.floor(Math.random() * 1)
-    }
-
-    console.log("Record: ", record)
-
-    return {
-      HttpStatusCode: HttpStatusCode.Ok,
-      body: record
+  save(records: Array<Record>){
+    console.log("Records: ", records)
+    for(let r of records){
+      console.log("Record: ", r)
     }
   }
 }

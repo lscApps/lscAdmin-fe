@@ -22,6 +22,7 @@ import { RecurringType } from '../../enums/recurring_type';
 })
 export class RercordFormComponent implements OnInit{
 
+  message: string = ""
   currentDate = new Date().toLocaleDateString('en-UK')
   alertSuccess = false;
   checked = true;
@@ -36,6 +37,8 @@ export class RercordFormComponent implements OnInit{
   recurringTypes: SelectItem[] = RecurringType.getAll();
   months: SelectItem[] = Month.getAll();
 
+  editIndex: number = -1;
+  recordsNotSaved: Array<Record> =[];
 
   constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){ 
    this.recordForm = this.startForm()
@@ -45,11 +48,11 @@ export class RercordFormComponent implements OnInit{
     this.departments = this.departmentService.getDepartments();
   }
 
-  save():void{
+  addToNotSavedList():void{
     if(this.recordForm.valid){
       let formValues = this.recordForm.value;
       let record: Record = new Record(
-          formValues.descricao,
+          formValues.description,
           formValues.amount,
           formValues.date,
           formValues.departmentId,
@@ -58,18 +61,26 @@ export class RercordFormComponent implements OnInit{
           formValues.initialMonth, 
           formValues.replicaCount
         )
-      
-      this.recordService.save(record)
-      this.showAlert()
+            
+      if(this.editIndex > -1){
+        this.recordsNotSaved[this.editIndex] = record
+        this.editIndex = -1
+      }
+      else{
+        this.recordsNotSaved.push(record);    
+      } 
+      this.showAlert("Record add successful!")    
+      this.recordForm.get('description')?.setValue("")
+      this.recordForm.get('description')?.setErrors(null)
     }
-
   }
   
-  showAlert(){
+  showAlert(message: string){
+    this.message = message
     this.alertSuccess = true
     setTimeout(() => {
       this.alertSuccess = false;
-    }, 5000);
+    }, 3000);
   }
 
 
@@ -85,7 +96,7 @@ export class RercordFormComponent implements OnInit{
 
   startForm(){
     return this.fb.group({
-      descricao: ['', [Validators.required, Validators.minLength(3)]], // Descrição
+      description: ['', [Validators.required, Validators.minLength(3)]], // Descrição
       amount: ['', [Validators.required]], // Amount
       date: ['', Validators.required, this.dateFormatValidator], // Date
       departmentId: [0, [Validators.required, Validators.min(1)]], // DepartmentId
@@ -95,5 +106,38 @@ export class RercordFormComponent implements OnInit{
       replicaCount: ["", []]
 
     })
+  }
+
+  editRecordNotSaved(index: number, record: Record){
+    this.editIndex = index;
+    this.recordForm.get('description')?.setValue(record.description)
+    this.recordForm.get('amount')?.setValue(record.amount)
+    this.recordForm.get('date')?.setValue(record.date)
+    this.recordForm.get('departmentId')?.setValue(record.departmentId)
+    this.recordForm.get('recordType')?.setValue(record.recordType)
+    this.recordForm.get('recurringType')?.setValue(record.recurringType)
+    this.recordForm.get('initialMonth')?.setValue(record.initialMonth)
+    this.recordForm.get('replicaCount')?.setValue(record.replicaCount)
+
+
+  }
+
+  deleteRecordNotSaved(index: number){
+    this.recordsNotSaved.splice(index,1);
+  }
+
+  getDepartmentNameById(id:number){
+    for(let dep of this.departments){
+      if (dep.id == id){
+        return dep.name;
+      }
+    }
+    return "Department not present";
+  }
+
+  saveRecords(){
+    this.recordService.save(this.recordsNotSaved)
+    this.recordsNotSaved = []
+    this.showAlert("All records saved!")  
   }
 }
