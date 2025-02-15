@@ -1,6 +1,6 @@
-<div class="fixed-bottom start-0 w-100 " role="alert" [ngClass]="{'fade': !alertSuccess, 'z-3 show': alertSuccess}">
-    <div class="alert alert-success text-center">
-        <label><i class="bi bi-check-circle-fill"></i>{{message}}</label>
+<div class="fixed-bottom start-0 w-100 " role="alert" [ngClass]="{'fade': !showingAlert, 'z-3 show': showingAlert}">
+    <div class="alert text-center" [ngClass]="{'alert-success': alertSuccess, 'alert-danger': !alertSuccess}">
+        <label><i class="bi " [ngClass]="{'bi-check-circle-fill': alertSuccess, 'bi-dash-circle-fill': !alertSuccess}"> {{message}}</i></label>
     </div>
 </div>
 
@@ -21,55 +21,33 @@
         </div>
     </div>
 
-    <div class="input-group" *ngIf="recordForm.get('recordType')?.value == recordTypeRecurring">
+    <div class="input-group">
         <select class="form-select text-center" formControlName="recurringType">
-            <option value="-1">Select Recurring type</option>
+            <option value="undefined">Select Recurring type</option>
             <option *ngFor="let type of recurringTypes" [value]=type.id>
                 {{type.name}}
             </option>
         </select>
+
+        <label class="input-group-text ms-1" for="recurringCount"><i class="bi bi-repeat-1"></i></label>
+        <input type="number" class="form-control disabled"   placeholder="Set number of installments" formControlName="recurringCount"/>
     </div>
-
-    <div class="input-group" *ngIf="recordForm.get('recordType')?.value == recordTypeRecurring">        
-        <select class="form-select text-center" formControlName="initialMonth">
-            <option value=-1>Select the month for Recurring expense init</option>
-            <option *ngFor="let month of months" [value]=month.id>
-                {{month.name}}
-            </option>
-        </select>
-        <input type="number" class="form-control"   placeholder="Set number of installments" formControlName="replicaCount" *ngIf="recordForm.get('recurringType')?.value == 1"/>   
-    </div> 
     
-
-
     <div class="input-group">
         <label class="input-group-text" for="description"><i class="bi bi-info-square"></i></label>
-        <input type="text" class="form-control"   placeholder="Set description" formControlName="description"/>     
+        <input type="text" class="form-control"  placeholder="Set description" formControlName="description"
+        [ngClass]="{'border-bottom border-danger':recordForm.get('description')?.invalid && recordForm.get('description')?.touched}"/>     
     </div>
-    <div class="form-text" *ngIf="recordForm.get('description')?.invalid && recordForm.get('description')?.touched">
-        <div class="alert alert-danger" role="alert">
-            Mandatory Field, minimun 3 caracters
-        </div>    
-    </div> 
 
     <div class="input-group">
         <label class="input-group-text" for="amount"><i class="bi bi-currency-euro"></i></label>
-        <input type="number" class="form-control" placeholder="Set amount" formControlName="amount" maxlength="18" />
+        <input type="number" class="form-control" placeholder="Set amount" formControlName="amount" maxlength="18" 
+        [ngClass]="{'border-bottom border-danger':recordForm.get('amount')?.invalid && recordForm.get('amount')?.touched}"/>
     </div>
-    <div class="form-text" *ngIf="recordForm.get('amount')?.invalid && recordForm.get('amount')?.touched">
-        <div class="alert alert-danger" role="alert">
-            Mandatory Field
-        </div>    
-    </div>
-
     <div class="input-group">
         <label class="input-group-text" for="date"><i class="bi bi-calendar2-date"></i></label>        
-        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="date" [dropSpecialCharacters]="false"/>
-    </div>
-    <div class="form-text" *ngIf="recordForm.get('date')?.invalid && recordForm.get('date')?.touched">
-        <div class="alert alert-danger" role="alert">
-            Invalid Date format. Date format requirede: dd/MM/YYYY e.g: {{currentDate}}
-        </div>    
+        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="date" [dropSpecialCharacters]="false"
+        [ngClass]="{'border-bottom border-danger':recordForm.get('date')?.invalid && recordForm.get('date')?.touched}"/>
     </div>
 
     <div class="gap-3">
