@@ -9,22 +9,24 @@ import { UpperCasePipe } from '@angular/common';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { TitlePageComponent } from './components/title-page/title-page.component';
 import { RercordFormComponent } from './components/record-form/record-form.component';
+import { HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReportsComponent
+    ReportsComponent, 
+    RercordFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    RercordFormComponent,
     TitlePageComponent,
     UpperCasePipe,
     NgxMaskDirective, 
-    NgxMaskPipe, 
+    NgxMaskPipe,
+    HttpClientModule 
   ],
   providers: [
     provideClientHydration(),

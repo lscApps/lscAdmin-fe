@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Record } from '../../models/record';
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpStatusCode } from '@angular/common/http';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecordService {
 
-  constructor() { }
+  private apiUrl = environment.apiUrl;
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-type': 'application/json',
+    }),
+  };
+
+  constructor(
+    private http: HttpClient,
+  ) {}
 
 
-  save(record:Record){
-    if(record.id == undefined){
-      record.id = Math.floor(Math.random() * 1)
-    }
-
-    console.log("Record: ", record)
-
-    return {
-      HttpStatusCode: HttpStatusCode.Ok,
-      body: record
-    }
+  addRecords(records: Array<Record>): Observable<any> {
+    const url = `${this.apiUrl}/record`;
+    return this.http.post<Array<Record>>(url, records, this.httpOptions);
   }
+
 }
 
