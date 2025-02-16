@@ -1,3 +1,5 @@
+import { create } from "domain";
+
 export class Record{
     id?: number;
     description!: string;
@@ -8,6 +10,7 @@ export class Record{
     recurringType!: number; // 1-Fixed // 2-Installment
     recurringCount?: number;
     status!: number; // 0- INACTIVE // 1- ACTIVE
+    created!: string;
 
 
     constructor(
@@ -18,7 +21,8 @@ export class Record{
         recordType: string, 
         recurringType: string,
         recurringCount: number,
-        status: number){
+        status: number,
+        created: string){
             this.description = description;
             this.amount = Number.parseFloat(amount)
             this.date = date;
@@ -27,5 +31,6 @@ export class Record{
             this.recurringType =  Number.parseInt(recurringType);
             this.recurringCount = recurringCount;
             this.status = status;
+            this.created = created;
     }
 }

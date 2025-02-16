@@ -6,7 +6,7 @@ import { AbstractControl, ReactiveFormsModule, FormControl, FormsModule, Validat
 import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { RecordService } from '../../services/record/record.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { parse, isValid } from 'date-fns';
+import { parse, isValid, format } from 'date-fns';
 import { delay, Observable, of } from 'rxjs';
 import { RecordType } from '../../enums/record_type';
 import { SelectItem } from '../../models/selectItem';
@@ -58,7 +58,8 @@ export class RercordFormComponent implements OnInit{
           formValues.recordType, 
           formValues.recurringType,
           formValues.recurringCount,
-          Status.ACTIVE.id
+          Status.ACTIVE.id,
+          format(new Date(), 'dd/MM/yyyy')
         )
             
       if(this.editIndex > -1){
