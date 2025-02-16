@@ -69,7 +69,7 @@ export class RercordFormComponent implements OnInit{
       else{
         this.recordsNotSaved.push(record);    
       } 
-      this.showAlert("Record add successful!", true)    
+      this.showAlert("Recod read to submition", true)    
       this.recordForm.get('description')?.setValue("")
     }
   }
@@ -142,7 +142,7 @@ export class RercordFormComponent implements OnInit{
       },
       error: e =>{
         console.log("Failed: ", e)
-        this.showAlert("Save records failed", false)
+        this.showAlert("FAIL - Submition to save records fail.", false)
       }
       
     });     
