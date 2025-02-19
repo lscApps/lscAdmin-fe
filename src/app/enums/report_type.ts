@@ -1,15 +1,15 @@
 import { SelectItem } from "../models/selectItem";
 
-export class RecordType{
-    static INCOME: SelectItem = {id: 0, name:"Income"};
-    static ONE_TIME: SelectItem = {id:1, name:"Expense"};
-    static RECURRING: SelectItem ={id:2, name:"Scheduled Expense"};
+export class ReportType{
+    static ANUAL: SelectItem = {id: 1, name:"Anual"};
+    static MONTHLY: SelectItem = {id:2, name:"Monthly"};
+    static CUSTOM: SelectItem ={id:3, name:"Custom"};
 
     static getAll(){
         return [
-            this.INCOME,
-            this.ONE_TIME,
-            this.RECURRING
+            this.ANUAL,
+            this.MONTHLY,
+            this.CUSTOM
         ]
     }
 

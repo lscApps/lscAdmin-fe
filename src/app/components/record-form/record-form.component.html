@@ -69,10 +69,10 @@
         </thead>
         <tbody>
             <tr *ngFor="let record of recordsNotSaved; let i=index">
-                <td>{{record.description}}</td>
+                <td>{{record.description | titlecase}}</td>
                 <td class="text-center">{{getDepartmentNameById(record.departmentId)}}</td>
                 <td class="text-center">{{record.date}}</td>
-                <td class="text-center">{{record.amount}}</td>
+                <td class="text-center">{{record.amount | currency:'EUR':'symbol':'1.2-2'}}</td>
                 <td>
                     <div class="btn-group btn-group-sm float-end">    
                         <button type="button" title="Edit" class="btn btn-primary float-end" (click)="editRecordNotSaved(i, record)"><i class="bi bi-pencil"></i></button>

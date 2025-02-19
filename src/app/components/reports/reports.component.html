@@ -1,1 +1,91 @@
-<h1>Reports running</h1>
+<h1 class="text-center">Reports</h1>
+
+<form [formGroup]="reportForm" (ngSubmit)="invokeReport()" class="row g-3 marginTop10">
+    <div class="input-group">
+        <select class="form-select text-center" formControlName="reportType">
+            <option value=0 disabled>Select Report Type</option>
+            <option *ngFor="let rep of reportTypeList" [value]="rep.id">
+                {{rep.name}}
+            </option>
+        </select>
+    </div>
+
+    <div class="col-6" *ngIf="reportForm.get('reportType')?.value == 1">        
+        <div class="input-group">
+            <label class="input-group-text" for="yearSelected">Year: </label>
+            <input type="number" class="form-control" placeholder="YYYY" formControlName="yearSelected" maxlength="4"/>
+        </div>
+    </div>
+
+
+    <div class="input-group" *ngIf="reportForm.get('reportType')?.value == 2">
+        <label class="input-group-text" for="yearSelected">Year: </label>
+        <input type="number" class="form-control mr10" placeholder="YYYY" formControlName="yearSelected" maxlength="4"/>
+        
+        <select class="form-select text-center" formControlName="monthSelected">
+            <option value=-1>Select Month</option>
+            <option *ngFor="let month of months" [value]=month.id>
+                {{month.name}}
+            </option>
+        </select>
+    </div>
+
+
+    <div class="input-group" *ngIf="reportForm.get('reportType')?.value == 3">
+        
+        <label class="input-group-text" for="dtInit">Initial Date:</label>        
+        <input type="text" class="form-control mr10" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="dtInit" [dropSpecialCharacters]="false"/>
+
+        <label class="input-group-text" for="dtEnd">Final Date:</label>        
+        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="dtEnd" [dropSpecialCharacters]="false"/>
+    </div>
+    
+
+    <div class="gap-3">
+        <button type="submit" title="Generate report" [disabled]="reportForm.invalid" class="btn btn-outline-primary float-end">Generate Report</button>  
+    </div>
+
+</form>
+
+
+<div *ngIf="recordList.length > 0" class="marginTop10">
+
+    <table class="table table-Light table-hover">
+        <thead>
+            <tr class="fw-bold">
+                <td>Type</td>
+                <td class="text-center">Description</td>
+                <td class="text-center">Department</td>
+                <td class="text-center">Date</td>
+                <td class="text-end">Amount</td>
+                <!-- <td class="text-end">Actions</td> -->
+            </tr>   
+        </thead>
+        <tbody class="table-group-divider">
+            <tr *ngFor="let record of recordList; let i=index">
+                <td class=""  [ngClass]="{'text-danger': record.recordType > 0, 'text-primary': record.recordType == 0}">{{getRecordType(record.recordType)}}</td>
+                <td class="text-center">{{record.description | titlecase}}</td>
+                <td class="text-center">{{record.departmentId}}</td>
+                <td class="text-center">{{record.date}}</td>
+                <td class="text-end" [ngClass]="{'text-danger': record.recordType > 0, 'text-primary': record.recordType == 0}">{{record.amount | currency:'EUR':'symbol':'1.2-2'}}</td>
+            </tr>
+        </tbody>
+     </table>
+
+     <table class="table table-Light table-hover">
+        <thead>
+            <tr>
+                <td class="text-primary fw-bold">Total Income</td>
+                <td class="text-center text-danger fw-bold">Total Expenses</td>
+                <td class="text-end fw-bold" [ngClass]="{'text-danger': balance < 0, 'text-primary': balance > 0}">Balance</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-primary fw-bold">{{totalIncome | currency:'EUR':'symbol':'1.2-2'}}</td>
+                <td class="text-center text-danger fw-bold">{{totalExpense | currency:'EUR':'symbol':'1.2-2'}}</td>
+                <td class="text-end fw-bold" [ngClass]="{'text-danger': balance < 0, 'text-primary': balance > 0}">{{balance | currency:'EUR':'symbol':'1.2-2'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
