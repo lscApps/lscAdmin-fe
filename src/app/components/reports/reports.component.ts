@@ -131,4 +131,22 @@ export class ReportsComponent implements OnInit{
 
   }
 
+  //TODO: Create a component to export files
+  exportExcel(){
+    this.recordService.exportAsXls(this.recordList).subscribe((blob) =>{
+      const url = window.URL.createObjectURL(blob);
+
+      // Criando um link temporário
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'records.xls'; // Nome do arquivo
+      document.body.appendChild(a);
+      a.click();
+
+      // Limpando o objeto temporário
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    })
+  }
+
 }

@@ -45,6 +45,11 @@ export class RecordService {
     return this.http.get<Array<Record>>(url)
   }
 
+  exportAsXls(records: Array<Record>): Observable<any>{
+    let url = `${this.apiUrl}/excel`
+
+    return this.http.post(url, records, {responseType: 'blob'})
+  }
 
 }
 
