@@ -10,13 +10,14 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { TitlePageComponent } from './components/title-page/title-page.component';
 import { RercordFormComponent } from './components/record-form/record-form.component';
 import { HttpClientModule} from '@angular/common/http';
+import { RecurringRecordComponent } from './components/recurring-record/recurring-record.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ReportsComponent, 
-    RercordFormComponent
+    RercordFormComponent, RecurringRecordComponent
   ],
   imports: [
     BrowserModule,
