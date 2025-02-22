@@ -26,3 +26,6 @@ a{
     transition: all 1.0s ease-in-out !important;
 }
 
+.w-66{
+    width: 66% !important;
+}
