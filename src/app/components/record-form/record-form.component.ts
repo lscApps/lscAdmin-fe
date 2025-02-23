@@ -159,6 +159,7 @@ export class RercordFormComponent implements OnInit{
 
 
   saveRecords(){
+    console.log(this.recordsNotSaved)
     this.recordService.addRecords(this.recordsNotSaved).subscribe({
       next:(n) => {
         this.recordsNotSaved = [];

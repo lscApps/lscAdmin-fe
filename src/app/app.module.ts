@@ -9,7 +9,7 @@ import { UpperCasePipe } from '@angular/common';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { TitlePageComponent } from './components/title-page/title-page.component';
 import { RercordFormComponent } from './components/record-form/record-form.component';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
 import { RecurringRecordComponent } from './components/recurring-record/recurring-record.component';
 
 
@@ -31,7 +31,8 @@ import { RecurringRecordComponent } from './components/recurring-record/recurrin
   ],
   providers: [
     provideClientHydration(),
-    provideNgxMask()
+    provideNgxMask(),
+    provideHttpClient(withFetch())
   ],
   bootstrap: [AppComponent]
 })
