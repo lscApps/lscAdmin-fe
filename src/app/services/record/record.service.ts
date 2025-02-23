@@ -12,23 +12,17 @@ export class RecordService {
 
   private apiUrl = `${environment.apiUrl}/record`;
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-type': 'application/json',
-    }),
-  };
-
   constructor(
     private http: HttpClient,
   ) {}
 
 
   async updateRecord(record: Record){
-    return await firstValueFrom(this.http.put(this.apiUrl, record, this.httpOptions));
+    return await firstValueFrom(this.http.put(this.apiUrl, record));
   }
 
   addRecords(records: Array<Record>): Observable<any> {
-    return this.http.post<Array<Record>>(this.apiUrl, records, this.httpOptions);
+    return this.http.post<Array<Record>>(this.apiUrl, records);
   }
 
   getRecordsByRange(dtInit: string, dtEnd: string): Observable<any>{
@@ -58,6 +52,11 @@ export class RecordService {
     let url = `${this.apiUrl}/excel`
 
     return this.http.post(url, records, {responseType: 'blob'})
+  }
+
+  async deleteRecord(record: Record): Promise<Observable<any>>{
+    let url = `${this.apiUrl}/${record.id}`
+    return await this.http.delete(url);
   }
 
 }

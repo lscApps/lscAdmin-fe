@@ -14,6 +14,7 @@ export class RecurringRecordComponent implements OnInit{
   recordList: Record[] =[];
   @Input() recordSelected?: Record;
   editMode = false;
+  recordSeletectedToDelete?: Record;
 
   constructor(private recordService: RecordService){}
   
@@ -45,8 +46,22 @@ export class RecurringRecordComponent implements OnInit{
 
   }
 
-  deleteRecord(record: Record){
-    console.log(record);
+  deleteRecord(){
+    console.log('Sending Request to delete RECORD: ', this.recordSeletectedToDelete);
+    this.recordService.deleteRecord(this.recordSeletectedToDelete!).then(observable =>{
+      observable.subscribe({
+        next:(response) =>{
+          this.getRecurrentRecords();
+        },
+        error: e =>{
+          console.log("Delete request fail: ", e)
+        }
+      })
+    })
+  }
+
+  selectRecord(record: Record){
+    this.recordSeletectedToDelete = record;
   }
 
   ngDoCheck(){
