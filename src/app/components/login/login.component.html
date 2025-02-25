@@ -1,28 +1,38 @@
 <div class="card mb-3 border border-0 position-absolute top-50 start-50 translate-middle w-66 p-3"
     style="max-width: 540px;">
+    <!-- <div class="fixed-top start-0 w-100 " role="alert" [ngClass]="{'fade': !loginFailed, 'z-3 show': loginFailed}">
+        <div class="alert alert-danger text-center">
+            <label><i class="bi bi-dash-circle-fill">Wrong Credentials</i></label>
+        </div>
+    </div> -->
     <div class="row g-0">
-        <div class="col-md-4 border-end border-primary ">
+        <div class="col-md-4">
             <img src="../../../assets/imgs/logo_nb.png" class="img-fluid rounded-start" alt="...">
         </div>
         <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title text-center">Login</h5>
-                <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="card-body" [ngClass]="{'red-shadow': loginFailed, 'shadow': !loginFailed}">
+                <h5 class="card-title text-center text-primary" [ngClass]="{'text-danger fw-bold': loginFailed}">Login
+                </h5>
+
+                <p class="text-center text-danger fw-bold" [ngClass]="{'fade': !loginFailed, 'show': loginFailed}"><i
+                        class="bi bi-x-octagon"></i>- Wrong Credentials</p>
+
+                <form [formGroup]="loginForm" (ngSubmit)="login()" class="row g-3">
                     <div class="mb-3">
                         <!-- <label for="username" class="form-label"></label> -->
-                        <input type="text" class="form-control border-primary" placeholder="Username" id="username"
+                        <input type="text" class="form-control" placeholder="Username" id="username"
                             formControlName="username">
                     </div>
 
                     <div class="mb-3">
                         <!-- <label for="password" class="form-label">Password</label> -->
-                        <input type="password" class="form-control border-primary" placeholder="Password" id="password"
+                        <input type="password" class="form-control" placeholder="Password" id="password"
                             formControlName="password">
                     </div>
 
-                    <div class="gap-3">
+                    <div class="mb-3">
                         <button type="submit" title="Login" [disabled]="loginForm.invalid"
-                            class="btn btn-primary float-end">Login</button>
+                            class="btn float-end btn-primary fw-bold">Login</button>
                     </div>
                 </form>
             </div>

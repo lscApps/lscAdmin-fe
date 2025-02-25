@@ -23,9 +23,13 @@ a{
 
 
 .show{
-    transition: all 1.0s ease-in-out !important;
+    transition: all 0.7s ease-in-out !important;
 }
 
 .w-66{
     width: 66% !important;
+}
+
+.red-shadow {
+    box-shadow: 0 0.5rem 1rem rgba(255, 0, 0, 0.35); /* Red shadow */
 }

@@ -33,11 +33,10 @@ export class LoginComponent implements OnInit{
     
     if(loginSuccess){
         console.log('Login success')
-        this.loginFailed = false;
         this.router.navigate(['/records'])
     }else{
       console.log('Login failed')
-      this.loginFailed = true;
+      this.showAlert();
     }
 
   }
@@ -52,6 +51,13 @@ export class LoginComponent implements OnInit{
 
   getPassword(): string{
     return this.loginForm.get('password')?.value;
+  }
+
+  showAlert(){
+    this.loginFailed = true;
+    setTimeout(() => {
+      this.loginFailed = false;
+    }, 10000);
   }
 
 }
