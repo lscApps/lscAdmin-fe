@@ -12,6 +12,7 @@ import { SelectItem } from '../../models/selectItem';
 import { Month } from '../../enums/month';
 import { RecurrentType } from '../../enums/recurent_type';
 import { Status } from '../../enums/status';
+import { AuthService } from '../../services/login/auth.service';
 
 @Component({
   selector: 'app-record-form',
@@ -44,17 +45,19 @@ export class RercordFormComponent implements OnInit{
   editIndex: number = -1;
   recordsNotSaved: Array<Record> =[];
 
-  constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
+  constructor(private authService: AuthService, private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
    this.recordForm = this.startForm()
   }
 
   ngOnInit(): void {
     //TODO: Need create a page to handle Departments
+    this.authService.isAuthenticated();
     this.departments = this.departmentService.getDepartments();
     if(this.record){
       this.setRecordForm(this.record);
       this.editMode = true;
     }
+
   }
 
   addToNotSavedList():void{
