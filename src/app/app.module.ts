@@ -11,13 +11,14 @@ import { TitlePageComponent } from './components/title-page/title-page.component
 import { RercordFormComponent } from './components/record-form/record-form.component';
 import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
 import { RecurringRecordComponent } from './components/recurring-record/recurring-record.component';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ReportsComponent,
-    RercordFormComponent, RecurringRecordComponent
+    RercordFormComponent, RecurringRecordComponent, LoginComponent
   ],
   imports: [
     BrowserModule,
