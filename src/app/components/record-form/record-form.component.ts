@@ -13,6 +13,7 @@ import { Month } from '../../enums/month';
 import { RecurrentType } from '../../enums/recurent_type';
 import { Status } from '../../enums/status';
 import { AuthService } from '../../services/login/auth.service';
+import { Department } from '../../models/department';
 
 @Component({
   selector: 'app-record-form',
@@ -37,7 +38,7 @@ export class RercordFormComponent implements OnInit{
   departmentId: number = 1;
   recordForm: FormGroup;
 
-  departments: SelectItem[] = [];
+  departments: Department[] = [];
   recordTypes: SelectItem[] = RecordType.getAll();
   recurringTypes: SelectItem[] = RecurrentType.getAll();
   months: SelectItem[] = Month.getAll();
@@ -52,13 +53,29 @@ export class RercordFormComponent implements OnInit{
   ngOnInit(): void {
     //TODO: Need create a page to handle Departments
     this.authService.isAuthenticated();
-    this.departments = this.departmentService.getDepartments();
+    this.getDepartments();
+    
+    console.log(this.departments)
+    
     if(this.record){
       this.setRecordForm(this.record);
       this.editMode = true;
     }
 
   }
+
+  getDepartments(){
+    this.departmentService.getAllDepartments().then(
+      response=>{
+        console.log(response);
+        this.departments = response;
+      },
+       e =>{
+        console.log('Error featching Departments: ', e.message);
+      }
+    );
+  }
+
 
   addToNotSavedList():void{
     if(this.recordForm.valid){

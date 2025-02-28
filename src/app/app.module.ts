@@ -12,13 +12,14 @@ import { RercordFormComponent } from './components/record-form/record-form.compo
 import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
 import { RecurringRecordComponent } from './components/recurring-record/recurring-record.component';
 import { LoginComponent } from './components/login/login.component';
+import { DepartmentsComponent } from './components/departments/departments.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ReportsComponent,
-    RercordFormComponent, RecurringRecordComponent, LoginComponent
+    RercordFormComponent, RecurringRecordComponent, LoginComponent, DepartmentsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,78 @@
+<div class="card marginTop10">
+    <div class="card-header fw-bold text-center">
+        <h4>Departments Management</h4>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="departmentForm" class="row g-3">
+            <div class="input-group">
+                <label class="input-group-text" for="name"><i class="bi bi-info-square"></i></label>
+                <input type="text" class="form-control" placeholder="Set Department Name" formControlName="name"
+                    [ngClass]="{'border-bottom border-danger':departmentForm.get('name')?.invalid && departmentForm.get('name')?.touched}" />
+            </div>
+
+            <div class="input-group">
+                <label class="input-group-text" for="manager"><i class="bi bi-award-fill"></i></label>
+                <input type="text" class="form-control" placeholder="Set Department Lead" formControlName="manager"
+                    maxlength="18"
+                    [ngClass]="{'border-bottom border-danger':departmentForm.get('manager')?.invalid && departmentForm.get('manager')?.touched}" />
+            </div>
+        </form>
+    </div>
+    <div class="card-footer text-body-secondary">
+        <div class="gap-3">
+            <button type="submit" title="Insert" [disabled]="departmentForm.invalid"
+                class="btn btn-outline-primary float-end" (click)="saveDepartament()"><i
+                    class="bi bi-floppy"></i></button>
+            <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
+                    class="bi bi-eraser"></i></button>
+        </div>
+    </div>
+</div>
+
+<table class="table table-Light table-striped table-hover mt-3" *ngIf="departmentList.length > 0">
+    <thead>
+        <tr class="fw-bold">
+            <td>Id</td>
+            <td class="text-center">Name</td>
+            <td class="text-center">Manager</td>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        <tr *ngFor="let dep of departmentList;">
+            <td class="text-start">{{dep.id}}</td>
+            <td class="text-center">{{dep.name | titlecase}}</td>
+            <td class="text-center">{{dep.manager | titlecase}}</td>
+            <td>
+                <div class="btn-group btn-group-sm float-end">
+                    <button type="button" title="Edit" class="btn btn-outline-primary btn-lg float-end"
+                        (click)="selectDepartmentToEdit(dep)"><i class="bi bi-pencil"></i></button>
+                    <button type="button" title="Delete" class="btn btn-outline-danger float-end" data-bs-toggle="modal"
+                        data-bs-target="#confirmationModal" (click)="setSelectedDepartment(dep)"><i
+                            class="bi bi-trash3"></i></button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Department</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Comfirme department deletion?</p>
+                <p>{{departmentSelected?.name}}</p>
+                <p>{{departmentSelected?.manager}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
+                        class="bi bi-arrow-return-left"></i></button>
+                <button type="button" class="btn btn-primary" (click)="deleteDepartment()" data-bs-dismiss="modal"><i
+                        class="bi bi-check-lg"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
