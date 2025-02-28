@@ -6,6 +6,8 @@
     </div>
 </div>
 
+<h2 class="text-center" *ngIf="!editMode">Record register</h2>
+
 <form [formGroup]="recordForm" (ngSubmit)="addToNotSavedList()" class="row g-3 marginTop10">
     <div class="input-group">
         <select class="form-select text-center" formControlName="departmentId">

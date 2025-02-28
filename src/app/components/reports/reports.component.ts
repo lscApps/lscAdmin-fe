@@ -7,6 +7,8 @@ import { NgClass, NgFor, NgIf, UpperCasePipe, CurrencyPipe } from '@angular/comm
 import { SelectItem } from '../../models/selectItem';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Month } from '../../enums/month';
+import { DepartmentService } from '../../services/department/department.service';
+import { Department } from '../../models/department';
 
 @Component({
   selector: 'app-reports',
@@ -17,22 +19,35 @@ import { Month } from '../../enums/month';
 export class ReportsComponent implements OnInit{
 
   recordList: Record[] =[];
-  reportTypeList: SelectItem[] = []
+  departmentList: Department[] = [];
+  reportTypeList: SelectItem[] = [];
   months: SelectItem[] = [];
   reportForm: FormGroup;
   totalIncome  = 0;
   totalExpense = 0;
   balance = 0;
 
-  constructor(private recordService: RecordService, private fb: FormBuilder){
+  constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
     this.reportForm = this.startForm()
     this.months = Month.getAll()
-  }
-  
+  } 
   
   ngOnInit(): void {
+    this.featchDepartments();
     this.reportTypeList = ReportType.getAll();
+
     
+  }
+
+  featchDepartments(){
+    this.departmentService.getAllDepartments().then(
+      response=>{
+        this.departmentList = response;
+      },
+      error =>{
+        console.log('Error featching Departments: ', error.message);
+      }
+    );
   }
 
   getRecordType(recordTypedId: number){
@@ -147,6 +162,14 @@ export class ReportsComponent implements OnInit{
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     })
+  }
+
+  getDepartmentNameByID(id: number){
+    for (let dep of this.departmentList){
+      if (dep.id == id)
+        return dep.name;
+    }
+    return 
   }
 
 }
