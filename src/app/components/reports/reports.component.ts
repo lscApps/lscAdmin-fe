@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Month } from '../../enums/month';
 import { DepartmentService } from '../../services/department/department.service';
 import { Department } from '../../models/department';
+import { RecurrentType } from '../../enums/recurent_type';
 
 @Component({
   selector: 'app-reports',
@@ -17,6 +18,8 @@ import { Department } from '../../models/department';
   providers:[CurrencyPipe]
 })
 export class ReportsComponent implements OnInit{
+
+  @Input() isManageble: boolean = false;
 
   recordList: Record[] =[];
   departmentList: Department[] = [];
@@ -50,8 +53,12 @@ export class ReportsComponent implements OnInit{
     );
   }
 
-  getRecordType(recordTypedId: number){
-    return RecordType.getById(recordTypedId)?.name;
+  getRecordType(record: Record){
+    if(record.recordType == RecordType.RECURRING.id){
+      return RecurrentType.getById(record.recurringType)?.name;
+    }
+
+    return RecordType.getById(record.recordType)?.name;
   }
 
   startForm(){
@@ -170,6 +177,39 @@ export class ReportsComponent implements OnInit{
         return dep.name;
     }
     return 
+  }
+
+  recordSelected?: Record;
+  
+  editRecord(record: Record){
+    this.recordSelected = record;   
+  }
+
+  recordSeletectedToDelete?: Record;
+
+  selectRecord(record: Record){
+    this.recordSeletectedToDelete = record;
+  }
+
+  deleteRecord(){
+    console.log('Sending Request to delete RECORD: ', this.recordSeletectedToDelete);
+    this.recordService.deleteRecord(this.recordSeletectedToDelete!).then(observable =>{
+      observable.subscribe({
+        next:(response) =>{
+          this.invokeReport();
+        },
+        error: e =>{
+          console.log("Delete request fail: ", e)
+        }
+      })
+    })
+  }
+
+  reloadPage(event?: boolean){
+    if(event){
+      this.invokeReport();
+      this.recordSelected = undefined;
+    }
   }
 
 }

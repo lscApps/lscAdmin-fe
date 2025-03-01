@@ -10,7 +10,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { TitlePageComponent } from './components/title-page/title-page.component';
 import { RercordFormComponent } from './components/record-form/record-form.component';
 import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
-import { RecurringRecordComponent } from './components/recurring-record/recurring-record.component';
+import { RecordManagerComponent } from './components/record-manager/record-manager.component';
 import { LoginComponent } from './components/login/login.component';
 import { DepartmentsComponent } from './components/departments/departments.component';
 
@@ -19,7 +19,7 @@ import { DepartmentsComponent } from './components/departments/departments.compo
   declarations: [
     AppComponent,
     ReportsComponent,
-    RercordFormComponent, RecurringRecordComponent, LoginComponent, DepartmentsComponent
+    RercordFormComponent, RecordManagerComponent, LoginComponent, DepartmentsComponent
   ],
   imports: [
     BrowserModule,

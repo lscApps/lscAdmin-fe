@@ -1,29 +1,32 @@
-<h2 class="text-center">Reports</h2>
+<div class="overlay" *ngIf="recordSelected">
+    <div class="card position-absolute top-50 start-50 translate-middle w-66 opacity-100 z-3">
+        <h5 class="card-header">Edit Record - "{{recordSelected.description}}"</h5>
+        <div class="card-body">
+            <app-record-form [record]="recordSelected" (recordChangeEvent)="reloadPage($event)"></app-record-form>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-center">{{isManageble?"Record Management":"Reports"}}</h2>
 
 <form [formGroup]="reportForm" (ngSubmit)="invokeReport()" class="row g-3 marginTop10">
     <div class="input-group">
         <select class="form-select text-center" formControlName="reportType">
-            <option value=0 disabled>Select Report Type</option>
+            <option value=0 disabled>{{isManageble? "Select search type" : "Select report type"}}</option>
             <option *ngFor="let rep of reportTypeList" [value]="rep.id">
                 {{rep.name}}
             </option>
         </select>
     </div>
 
-    <div class="col-6" *ngIf="reportForm.get('reportType')?.value == 1">
-        <div class="input-group">
-            <label class="input-group-text" for="yearSelected">Year: </label>
-            <input type="number" class="form-control" placeholder="YYYY" formControlName="yearSelected" maxlength="4" />
-        </div>
-    </div>
-
-
-    <div class="input-group" *ngIf="reportForm.get('reportType')?.value == 2">
+    <div class="input-group"
+        *ngIf="reportForm.get('reportType')?.value == 1 || reportForm.get('reportType')?.value == 2">
         <label class="input-group-text" for="yearSelected">Year: </label>
         <input type="number" class="form-control mr10" placeholder="YYYY" formControlName="yearSelected"
             maxlength="4" />
 
-        <select class="form-select text-center" formControlName="monthSelected">
+        <select class="form-select text-center" formControlName="monthSelected"
+            *ngIf="reportForm.get('reportType')?.value == 2">
             <option value=-1>Select Month</option>
             <option *ngFor="let month of months" [value]=month.id>
                 {{month.name}}
@@ -45,8 +48,9 @@
 
 
     <div class="gap-3">
-        <button type="submit" title="Generate report" [disabled]="reportForm.invalid"
-            class="btn btn-outline-primary float-end">Generate Report</button>
+        <button type="submit" title="Generate report" [disabled]="reportForm.invalid" class="w-100 btn "
+            [ngClass]="{'btn-primary':isManageble,  'btn-outline-primary': !isManageble}">{{isManageble?
+            "Search" : "Generate Report"}}</button>
     </div>
 
 </form>
@@ -54,7 +58,7 @@
 
 <div *ngIf="recordList.length > 0" class="marginTop10">
 
-    <div class="gap-3 float-end">
+    <div class="gap-3 float-end" *ngIf="!isManageble">
         <button type="button" title="Export XLS" (click)="exportExcel()" class="btn btn-outline-success float-start "><i
                 class="bi bi-filetype-xls"></i></button>
     </div>
@@ -66,20 +70,31 @@
                 <td class="text-center">Description</td>
                 <td class="text-center">Department</td>
                 <td class="text-center">Date</td>
-                <td class="text-end">Amount</td>
-                <!-- <td class="text-end">Actions</td> -->
+                <td class="text-center">Amount</td>
+                <td class="text-end" *ngIf="isManageble">Actions</td>
             </tr>
         </thead>
         <tbody class="table-group-divider">
             <tr *ngFor="let record of recordList; let i=index">
                 <td class="" [ngClass]="{'text-danger': record.recordType > 0, 'text-primary': record.recordType == 0}">
-                    {{getRecordType(record.recordType)}}</td>
+                    {{getRecordType(record)}}</td>
                 <td class="text-center">{{record.description | titlecase}}</td>
                 <td class="text-center">{{getDepartmentNameByID(record.departmentId)}}</td>
                 <td class="text-center">{{record.date}}</td>
-                <td class="text-end"
+                <td class="text-center"
                     [ngClass]="{'text-danger': record.recordType > 0, 'text-primary': record.recordType == 0}">
                     {{record.amount | currency:'EUR':'symbol':'1.2-2'}}</td>
+                <td class="text-end" *ngIf="isManageble">
+                    <div class="btn-group btn-group-sm float-end">
+                        <button type="button" title="Edit" class="btn btn-outline-primary float-end"
+                            data-bs-toggle="modal" data-bs-target="#editModal" (click)="editRecord(record)"><i
+                                class="bi bi-pencil"></i></button>
+
+                        <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal"
+                            data-bs-target="#confirmationModal" (click)="selectRecord(record)"><i
+                                class="bi bi-trash3"></i></button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -102,4 +117,27 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  text-center">
+                <h4 class="modal-title">Deleting Record</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold fs-5">Please confirm data before delete</p>
+                <p>Description: {{recordSeletectedToDelete?.description}}</p>
+                <p>Ammount: {{recordSeletectedToDelete?.amount}}</p>
+                <p>Data: {{recordSeletectedToDelete?.date}}</p>
+            </div>
+            <div class="modal-footer" *ngIf="recordSeletectedToDelete">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
+                        class="bi bi-arrow-return-left"></i></button>
+                <button type="button" class="btn btn-primary" (click)="deleteRecord()" data-bs-dismiss="modal"><i
+                        class="bi bi-check-lg"></i></button>
+            </div>
+        </div>
+    </div>
 </div>
