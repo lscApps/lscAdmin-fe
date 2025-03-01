@@ -24,7 +24,7 @@ export class RercordFormComponent implements OnInit{
 
   @Input() record?: Record;
 
-  @Output() recordChange = new EventEmitter<string>();
+  @Output() recordChangeEvent = new EventEmitter<boolean>();
 
   editMode = false;
 
@@ -104,7 +104,7 @@ export class RercordFormComponent implements OnInit{
         record.id = this.record!.id
         this.recordService.updateRecord(record).then(()=>{
           this.showAlert("Record updated", true);
-          this.recordChange.emit(undefined);
+          this.recordChangeEvent.emit(true);
         });
       }else{
         this.showAlert("Record read to submition", true);
@@ -194,7 +194,7 @@ export class RercordFormComponent implements OnInit{
   }
 
   cancel(){
-    this.recordChange.emit('');
+    this.recordChangeEvent.emit(false);
   }
 
   ngDoCheck(){
