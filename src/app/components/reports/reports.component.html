@@ -1,68 +1,66 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
 <div class="overlay" *ngIf="recordSelected">
     <div class="card position-absolute top-50 start-50 translate-middle w-66 opacity-100 z-3">
-        <h5 class="card-header">Edit Record - "{{recordSelected.description}}"</h5>
-        <div class="card-body">
-            <app-record-form [record]="recordSelected" (recordChangeEvent)="reloadPage($event)"></app-record-form>
-        </div>
+        <app-record-form [record]="recordSelected" (recordChangeEvent)="reloadPage($event)"></app-record-form>
+    </div>
+</div>
+<div class="card marginTop10">
+    <div class="card-header fw-bold text-center">
+        <h4 class="text-center">{{isManageble?"Record Management":"Reports"}}
+            <button type="button" title="Export XLS" (click)="exportExcel()" class="btn btn-success float-end"
+                *ngIf="!isManageble && recordList.length > 0"><i class="bi bi-filetype-xls"></i></button>
+        </h4>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="reportForm" (ngSubmit)="invokeReport()" class="row g-3 marginTop10">
+            <div class="input-group">
+                <select class="form-select text-center" formControlName="reportType">
+                    <option value=0 disabled>{{isManageble? "Select search type" : "Select report type"}}</option>
+                    <option *ngFor="let rep of reportTypeList" [value]="rep.id">
+                        {{rep.name}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-group"
+                *ngIf="reportForm.get('reportType')?.value == 1 || reportForm.get('reportType')?.value == 2">
+                <label class="input-group-text" for="yearSelected">Year: </label>
+                <input type="number" class="form-control mr10" placeholder="YYYY" formControlName="yearSelected"
+                    maxlength="4" />
+
+                <select class="form-select text-center" formControlName="monthSelected"
+                    *ngIf="reportForm.get('reportType')?.value == 2">
+                    <option value=-1>Select Month</option>
+                    <option *ngFor="let month of months" [value]=month.id>
+                        {{month.name}}
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="input-group" *ngIf="reportForm.get('reportType')?.value == 3">
+
+                <label class="input-group-text" for="dtInit">Initial Date:</label>
+                <input type="text" class="form-control mr10" mask="00/00/0000" placeholder="dd/MM/YYYY"
+                    formControlName="dtInit" [dropSpecialCharacters]="false" />
+
+                <label class="input-group-text" for="dtEnd">Final Date:</label>
+                <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY"
+                    formControlName="dtEnd" [dropSpecialCharacters]="false" />
+            </div>
+
+
+            <div class="gap-3">
+                <button type="submit" title="Generate report" [disabled]="reportForm.invalid"
+                    class="w-100 btn btn-primary">{{isManageble? "Search" : "Generate Report"}}
+                </button>
+            </div>
+
+        </form>
     </div>
 </div>
 
-<h2 class="text-center">{{isManageble?"Record Management":"Reports"}}</h2>
-
-<form [formGroup]="reportForm" (ngSubmit)="invokeReport()" class="row g-3 marginTop10">
-    <div class="input-group">
-        <select class="form-select text-center" formControlName="reportType">
-            <option value=0 disabled>{{isManageble? "Select search type" : "Select report type"}}</option>
-            <option *ngFor="let rep of reportTypeList" [value]="rep.id">
-                {{rep.name}}
-            </option>
-        </select>
-    </div>
-
-    <div class="input-group"
-        *ngIf="reportForm.get('reportType')?.value == 1 || reportForm.get('reportType')?.value == 2">
-        <label class="input-group-text" for="yearSelected">Year: </label>
-        <input type="number" class="form-control mr10" placeholder="YYYY" formControlName="yearSelected"
-            maxlength="4" />
-
-        <select class="form-select text-center" formControlName="monthSelected"
-            *ngIf="reportForm.get('reportType')?.value == 2">
-            <option value=-1>Select Month</option>
-            <option *ngFor="let month of months" [value]=month.id>
-                {{month.name}}
-            </option>
-        </select>
-    </div>
-
-
-    <div class="input-group" *ngIf="reportForm.get('reportType')?.value == 3">
-
-        <label class="input-group-text" for="dtInit">Initial Date:</label>
-        <input type="text" class="form-control mr10" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="dtInit"
-            [dropSpecialCharacters]="false" />
-
-        <label class="input-group-text" for="dtEnd">Final Date:</label>
-        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="dtEnd"
-            [dropSpecialCharacters]="false" />
-    </div>
-
-
-    <div class="gap-3">
-        <button type="submit" title="Generate report" [disabled]="reportForm.invalid" class="w-100 btn "
-            [ngClass]="{'btn-primary':isManageble,  'btn-outline-primary': !isManageble}">{{isManageble?
-            "Search" : "Generate Report"}}</button>
-    </div>
-
-</form>
-
-
 <div *ngIf="recordList.length > 0" class="marginTop10">
-
-    <div class="gap-3 float-end" *ngIf="!isManageble">
-        <button type="button" title="Export XLS" (click)="exportExcel()" class="btn btn-outline-success float-start "><i
-                class="bi bi-filetype-xls"></i></button>
-    </div>
-
     <table class="table table-Light table-hover">
         <thead>
             <tr class="fw-bold">

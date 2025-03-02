@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit{
   user?: User;
   loginForm: FormGroup;
   loginFailed: boolean = false;
+  loading:boolean = false;
 
   constructor(private authService: AuthService, private router: Router,private fb: FormBuilder){
      this.loginForm = this.startForm()
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit{
   }
 
   async login(){
+    this.loading=true;
     this.user = new User(this.getUsername(), this.getPassword());
     let loginSuccess: boolean = await this.authService.login(this.user);
     
@@ -38,6 +40,7 @@ export class LoginComponent implements OnInit{
       console.log('Login failed')
       this.showAlert();
     }
+    this.loading=false;
 
   }
 

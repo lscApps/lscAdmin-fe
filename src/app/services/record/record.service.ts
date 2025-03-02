@@ -21,42 +21,42 @@ export class RecordService {
     return await firstValueFrom(this.http.put(this.apiUrl, record));
   }
 
-  addRecords(records: Array<Record>): Observable<any> {
-    return this.http.post<Array<Record>>(this.apiUrl, records);
+  async addRecords(records: Array<Record>): Promise<Array<Record>> {
+    return await firstValueFrom(this.http.post<Array<Record>>(this.apiUrl, records));
   }
 
-  getRecordsByRange(dtInit: string, dtEnd: string): Observable<any>{
+  async getRecordsByRange(dtInit: string, dtEnd: string): Promise<Array<Record>>{
     const params = new HttpParams()
       .set('dtInit', dtInit)
       .set('dtEnd', dtEnd)
 
-    return this.http.get<Array<Record>>(this.apiUrl, {params})
+    return await firstValueFrom(this.http.get<Array<Record>>(this.apiUrl, {params}));
   }
 
-  getMonthlyRecords(year: string, month: string){
+  async getMonthlyRecords(year: string, month: string): Promise<Array<Record>>{
     let url = `${this.apiUrl}/${year}/${month}`
-    return this.http.get<Array<Record>>(url)
+    return await firstValueFrom(this.http.get<Array<Record>>(url));
   }
 
-  getAnualRecords(year: string):Observable<any>{
+  async getAnualRecords(year: string):Promise<Array<Record>>{
     let url = `${this.apiUrl}/${year}`
-    return this.http.get<Array<Record>>(url)
+    return await firstValueFrom(this.http.get<Array<Record>>(url));
   }
 
-  getRecurrentRecords():Observable<any>{
+  async getRecurrentRecords():Promise<Array<Record>>{
     let url = `${this.apiUrl}/recurrents`;
-    return this.http.get<Array<Record>>(url);
+    return await firstValueFrom(this.http.get<Array<Record>>(url));
   }
 
-  exportAsXls(records: Array<Record>): Observable<any>{
+  async exportAsXls(records: Array<Record>):Promise<Blob>{
     let url = `${this.apiUrl}/excel`
 
-    return this.http.post(url, records, {responseType: 'blob'})
+    return await firstValueFrom(this.http.post(url, records, {responseType: 'blob'}));
   }
 
-  async deleteRecord(record: Record): Promise<Observable<any>>{
+  async deleteRecord(record: Record){
     let url = `${this.apiUrl}/${record.id}`
-    return await this.http.delete(url);
+    return await firstValueFrom(this.http.delete(url));
   }
 
 }

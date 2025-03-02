@@ -1,3 +1,5 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
+
 <div class="fixed-bottom start-0 w-100 " role="alert" [ngClass]="{'fade': !showingAlert, 'z-3 show': showingAlert}"
     *ngIf="!editMode">
     <div class="alert text-center" [ngClass]="{'alert-success': alertSuccess, 'alert-danger': !alertSuccess}">
@@ -6,103 +8,110 @@
     </div>
 </div>
 
-<h2 class="text-center" *ngIf="!editMode">Record register</h2>
-
-<form [formGroup]="recordForm" (ngSubmit)="addToNotSavedList()" class="row g-3 marginTop10">
-    <div class="input-group">
-        <select class="form-select text-center" formControlName="departmentId">
-            <option value=0 disabled>Select Department</option>
-            <option *ngFor="let dep of departments" [value]="dep.id">
-                {{dep.name}}
-            </option>
-        </select>
+<div class="card" [ngClass]="{'marginTop10': !editMode}">
+    <div class="card-header fw-bold text-center">
+        <h4 [ngClass]="{'text-start': editMode, 'text-center': !editMode}">{{editMode? "Edit Record" : "Record
+            register"}}
+        </h4>
     </div>
+    <div class="card-body">
+        <form [formGroup]="recordForm" (ngSubmit)="addToNotSavedList()" class="row g-3 marginTop10">
+            <div class="input-group">
+                <select class="form-select text-center" formControlName="departmentId">
+                    <option value=0 disabled>Select Department</option>
+                    <option *ngFor="let dep of departments" [value]="dep.id">
+                        {{dep.name}}
+                    </option>
+                </select>
+            </div>
 
-    <div>
-        <div class="form-check form-check-inline" *ngFor="let type of recordTypes">
-            <input type="radio" class="form-check-input" name="recordType" [id]="type.name" formControlName="recordType"
-                [value]=type.id>
-            <label class="form-check-label" [for]="type.name">{{type.name}}</label>
+            <div>
+                <div class="form-check form-check-inline" *ngFor="let type of recordTypes">
+                    <input type="radio" class="form-check-input" name="recordType" [id]="type.name"
+                        formControlName="recordType" [value]=type.id>
+                    <label class="form-check-label" [for]="type.name">{{type.name}}</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <select class="form-select text-center" formControlName="recurringType">
+                    <option value="undefined">Select Recurring type</option>
+                    <option *ngFor="let type of recurringTypes" [value]=type.id>
+                        {{type.name}}
+                    </option>
+                </select>
+
+                <label class="input-group-text ms-1" for="recurringCount"><i class="bi bi-repeat-1"></i></label>
+                <input type="number" class="form-control disabled" placeholder="Set number of installments"
+                    formControlName="recurringCount" />
+            </div>
+
+            <div class="input-group">
+                <label class="input-group-text" for="description"><i class="bi bi-info-square"></i></label>
+                <input type="text" class="form-control" placeholder="Set description" formControlName="description"
+                    [ngClass]="{'border-bottom border-danger':recordForm.get('description')?.invalid && recordForm.get('description')?.touched}" />
+            </div>
+
+            <div class="input-group">
+                <label class="input-group-text" for="amount"><i class="bi bi-currency-euro"></i></label>
+                <input type="number" class="form-control" placeholder="Set amount" formControlName="amount"
+                    maxlength="18"
+                    [ngClass]="{'border-bottom border-danger':recordForm.get('amount')?.invalid && recordForm.get('amount')?.touched}" />
+            </div>
+            <div class="input-group">
+                <label class="input-group-text" for="date"><i class="bi bi-calendar2-date"></i></label>
+                <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY"
+                    formControlName="date" [dropSpecialCharacters]="false"
+                    [ngClass]="{'border-bottom border-danger':recordForm.get('date')?.invalid && recordForm.get('date')?.touched}" />
+            </div>
+
+            <div class="gap-3" *ngIf="!editMode">
+                <button type="submit" title="Add" [disabled]="recordForm.invalid"
+                    class="btn btn-outline-primary float-end"><i class="bi bi-download"></i></button>
+                <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
+                        class="bi bi-trash3"></i></button>
+            </div>
+
+            <div class="gap-3" *ngIf="editMode">
+                <button type="submit" title="Save" [disabled]="recordForm.invalid"
+                    class="btn btn-outline-primary float-end z-3"><i class="bi bi-floppy"></i></button>
+
+                <button type="button" title="Cancel" class="btn btn-outline-danger float-end mr10"><i
+                        class="bi bi-arrow-90deg-left" (click)="cancel()"></i></button>
+            </div>
+        </form>
+
+
+        <div *ngIf="recordsNotSaved.length > 0 && !editMode" class="marginTop10">
+            <table class="table table-Light table-hover">
+                <thead>
+                    <tr>
+                        <td>Description</td>
+                        <td class="text-center">Department</td>
+                        <td class="text-center">Date</td>
+                        <td class="text-center">Amount</td>
+                        <td class="text-end">Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of recordsNotSaved; let i=index">
+                        <td>{{record.description | titlecase}}</td>
+                        <td class="text-center">{{getDepartmentNameById(record.departmentId)}}</td>
+                        <td class="text-center">{{record.date}}</td>
+                        <td class="text-center">{{record.amount | currency:'EUR':'symbol':'1.2-2'}}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm float-end">
+                                <button type="button" title="Edit" class="btn btn-primary float-end"
+                                    (click)="editRecordNotSaved(i, record)"><i class="bi bi-pencil"></i></button>
+                                <button type="button" title="Delete" class="btn btn-danger float-end"
+                                    (click)="deleteRecordNotSaved(i)"><i class="bi bi-trash3"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" title="Submit" class="btn btn-outline-primary float-end" (click)="saveRecords()"><i
+                    class="bi bi-floppy"></i></button>
         </div>
     </div>
-
-    <div class="input-group">
-        <select class="form-select text-center" formControlName="recurringType">
-            <option value="undefined">Select Recurring type</option>
-            <option *ngFor="let type of recurringTypes" [value]=type.id>
-                {{type.name}}
-            </option>
-        </select>
-
-        <label class="input-group-text ms-1" for="recurringCount"><i class="bi bi-repeat-1"></i></label>
-        <input type="number" class="form-control disabled" placeholder="Set number of installments"
-            formControlName="recurringCount" />
-    </div>
-
-    <div class="input-group">
-        <label class="input-group-text" for="description"><i class="bi bi-info-square"></i></label>
-        <input type="text" class="form-control" placeholder="Set description" formControlName="description"
-            [ngClass]="{'border-bottom border-danger':recordForm.get('description')?.invalid && recordForm.get('description')?.touched}" />
-    </div>
-
-    <div class="input-group">
-        <label class="input-group-text" for="amount"><i class="bi bi-currency-euro"></i></label>
-        <input type="number" class="form-control" placeholder="Set amount" formControlName="amount" maxlength="18"
-            [ngClass]="{'border-bottom border-danger':recordForm.get('amount')?.invalid && recordForm.get('amount')?.touched}" />
-    </div>
-    <div class="input-group">
-        <label class="input-group-text" for="date"><i class="bi bi-calendar2-date"></i></label>
-        <input type="text" class="form-control" mask="00/00/0000" placeholder="dd/MM/YYYY" formControlName="date"
-            [dropSpecialCharacters]="false"
-            [ngClass]="{'border-bottom border-danger':recordForm.get('date')?.invalid && recordForm.get('date')?.touched}" />
-    </div>
-
-    <div class="gap-3" *ngIf="!editMode">
-        <button type="submit" title="Add" [disabled]="recordForm.invalid" class="btn btn-outline-primary float-end"><i
-                class="bi bi-download"></i></button>
-        <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
-                class="bi bi-trash3"></i></button>
-    </div>
-
-    <div class="gap-3" *ngIf="editMode">
-        <button type="submit" title="Save" [disabled]="recordForm.invalid"
-            class="btn btn-outline-primary float-end z-3"><i class="bi bi-floppy"></i></button>
-
-        <button type="button" title="Cancel" class="btn btn-outline-danger float-end mr10"><i
-                class="bi bi-arrow-90deg-left" (click)="cancel()"></i></button>
-    </div>
-
-
-</form>
-
-<div *ngIf="recordsNotSaved.length > 0 && !editMode" class="marginTop10">
-    <table class="table table-Light table-hover">
-        <thead>
-            <tr>
-                <td>Description</td>
-                <td class="text-center">Department</td>
-                <td class="text-center">Date</td>
-                <td class="text-center">Amount</td>
-                <td class="text-end">Actions</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let record of recordsNotSaved; let i=index">
-                <td>{{record.description | titlecase}}</td>
-                <td class="text-center">{{getDepartmentNameById(record.departmentId)}}</td>
-                <td class="text-center">{{record.date}}</td>
-                <td class="text-center">{{record.amount | currency:'EUR':'symbol':'1.2-2'}}</td>
-                <td>
-                    <div class="btn-group btn-group-sm float-end">
-                        <button type="button" title="Edit" class="btn btn-primary float-end"
-                            (click)="editRecordNotSaved(i, record)"><i class="bi bi-pencil"></i></button>
-                        <button type="button" title="Delete" class="btn btn-danger float-end"
-                            (click)="deleteRecordNotSaved(i)"><i class="bi bi-trash3"></i></button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="submit" title="Submit" class="btn btn-outline-primary float-end" (click)="saveRecords()"><i
-            class="bi bi-floppy"></i></button>
 </div>

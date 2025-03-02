@@ -8,10 +8,8 @@ import { RecurrentType } from '../../enums/recurent_type';
   templateUrl: './record-manager.component.html',
   styleUrl: './record-manager.component.css'
 })
-export class RecordManagerComponent implements OnInit{
+export class RecordManagerComponent{
 
-
-  ngOnInit(): void {
-  }
+  loading:boolean = false;
 
 }

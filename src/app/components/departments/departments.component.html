@@ -1,9 +1,10 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
 <div class="card marginTop10">
     <div class="card-header fw-bold text-center">
         <h4>Departments Management</h4>
     </div>
     <div class="card-body">
-        <form [formGroup]="departmentForm" class="row g-3">
+        <form [formGroup]="departmentForm" (submit)="saveDepartament()" class="row g-3">
             <div class="input-group">
                 <label class="input-group-text" for="name"><i class="bi bi-info-square"></i></label>
                 <input type="text" class="form-control" placeholder="Set Department Name" formControlName="name"
@@ -16,25 +17,24 @@
                     maxlength="18"
                     [ngClass]="{'border-bottom border-danger':departmentForm.get('manager')?.invalid && departmentForm.get('manager')?.touched}" />
             </div>
+
+            <div class="gap-3">
+                <button type="submit" title="Insert" [disabled]="departmentForm.invalid"
+                    class="btn btn-outline-primary float-end"><i class="bi bi-floppy"></i></button>
+                <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
+                        class="bi bi-eraser"></i></button>
+            </div>
         </form>
-    </div>
-    <div class="card-footer text-body-secondary">
-        <div class="gap-3">
-            <button type="submit" title="Insert" [disabled]="departmentForm.invalid"
-                class="btn btn-outline-primary float-end" (click)="saveDepartament()"><i
-                    class="bi bi-floppy"></i></button>
-            <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
-                    class="bi bi-eraser"></i></button>
-        </div>
     </div>
 </div>
 
-<table class="table table-Light table-striped table-hover mt-3" *ngIf="departmentList.length > 0">
+<table class="table table-Light table-hover mt-3" *ngIf="departmentList.length > 0">
     <thead>
         <tr class="fw-bold">
             <td>Id</td>
             <td class="text-center">Name</td>
             <td class="text-center">Manager</td>
+            <td class="text-end">Actions</td>
         </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -59,17 +59,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete Department</h5>
+                <h4 class="modal-title">Delete Department</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Comfirme department deletion?</p>
+                <p class="fw-bold fs-5">Comfirme department deletion?</p>
                 <p>{{departmentSelected?.name}}</p>
                 <p>{{departmentSelected?.manager}}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
                         class="bi bi-arrow-return-left"></i></button>
+
                 <button type="button" class="btn btn-primary" (click)="deleteDepartment()" data-bs-dismiss="modal"><i
                         class="bi bi-check-lg"></i></button>
             </div>

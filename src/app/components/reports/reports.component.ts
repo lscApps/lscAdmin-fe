@@ -21,6 +21,11 @@ export class ReportsComponent implements OnInit{
 
   @Input() isManageble: boolean = false;
 
+  loading:boolean = false;
+  
+  recordSelected?: Record;
+  recordSeletectedToDelete?: Record;
+
   recordList: Record[] =[];
   departmentList: Department[] = [];
   reportTypeList: SelectItem[] = [];
@@ -29,6 +34,7 @@ export class ReportsComponent implements OnInit{
   totalIncome  = 0;
   totalExpense = 0;
   balance = 0;
+
 
   constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
     this.reportForm = this.startForm()
@@ -71,28 +77,26 @@ export class ReportsComponent implements OnInit{
       })
     }
 
-  invokeReport(){
+  async invokeReport(){
+    this.loading=true;
     console.log('Invoking Report: ', this.reportForm.get('reportType')?.value);
     let reportId = Number.parseInt(this.reportForm.get('reportType')?.value);
     switch(reportId){
       case ReportType.ANUAL.id:
         console.log('Not implemented');
-        this.getAnualReport();
+        await this.getAnualReport();
         break;
       case ReportType.MONTHLY.id:
         console.log('Invoking Monthly report');
-        this.getMonthlyReport();
+        await this.getMonthlyReport();
         break;
       case ReportType.CUSTOM.id:
         console.log('Invoking CUSTOM');        
-        this.getReportByRange();
+        await this.getReportByRange();
         break;
     }
-
-
-    if(this.reportForm.get('reportType')?.value == ReportType.CUSTOM.id){
-
-    }
+    
+    this.loading=false;
   }
 
 
@@ -109,53 +113,52 @@ export class ReportsComponent implements OnInit{
     this.balance = this.totalIncome - this.totalExpense;
   }
 
-  getAnualReport(){
-    this.recordService.getAnualRecords(this.reportForm.get('yearSelected')?.value).subscribe({
-      next:(n) =>{
+  async getAnualReport(){
+    await this.recordService.getAnualRecords(this.reportForm.get('yearSelected')?.value).then(
+      (n) =>{
         console.log(n);
         this.recordList = n;
         this.calculateInOut();
       },
-      error: e =>{
+      e =>{
         console.log("HTTP REQUEST FAIL: ", e)
       }
-    })
+    )
   }
 
-  getMonthlyReport(){
+  async getMonthlyReport(){
     let year = this.reportForm.get('yearSelected')?.value
     let month = this.reportForm.get('monthSelected')?.value
-    this.recordService.getMonthlyRecords(year, month).subscribe({
-      next:(n) =>{
-        console.log(n);
+    await this.recordService.getMonthlyRecords(year, month).then(
+      (n) =>{
         this.recordList = n;
         this.calculateInOut();
       },
-      error: e =>{
+      e =>{
         console.log("HTTP REQUEST FAIL: ", e)
-      }
-    })
+      })
   }
 
-  getReportByRange(){
+  async getReportByRange(){
     let dtInit: string = this.reportForm.get('dtInit')?.value
     let dtEnd: string = this.reportForm.get('dtEnd')?.value
-    this.recordService.getRecordsByRange(dtInit, dtEnd).subscribe({
-      next:(n) =>{
+    await this.recordService.getRecordsByRange(dtInit, dtEnd).then(
+      (n) =>{
         console.log(n);
         this.recordList = n;
         this.calculateInOut();
       },
-      error: e =>{
+      (e) =>{
         console.log("HTTP REQUEST FAIL: ", e)
       }
-    })
+    )
 
   }
 
   //TODO: Create a component to export files
-  exportExcel(){
-    this.recordService.exportAsXls(this.recordList).subscribe((blob) =>{
+  async exportExcel(){
+    this.loading=true;
+    await this.recordService.exportAsXls(this.recordList).then((blob) =>{
       const url = window.URL.createObjectURL(blob);
 
       // Criando um link temporário
@@ -168,7 +171,8 @@ export class ReportsComponent implements OnInit{
       // Limpando o objeto temporário
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-    })
+    })  
+    this.loading=false; 
   }
 
   getDepartmentNameByID(id: number){
@@ -178,38 +182,33 @@ export class ReportsComponent implements OnInit{
     }
     return 
   }
-
-  recordSelected?: Record;
   
   editRecord(record: Record){
     this.recordSelected = record;   
   }
 
-  recordSeletectedToDelete?: Record;
-
   selectRecord(record: Record){
     this.recordSeletectedToDelete = record;
   }
 
-  deleteRecord(){
-    console.log('Sending Request to delete RECORD: ', this.recordSeletectedToDelete);
-    this.recordService.deleteRecord(this.recordSeletectedToDelete!).then(observable =>{
-      observable.subscribe({
-        next:(response) =>{
+  async deleteRecord(){
+    this.loading=true;
+    await this.recordService.deleteRecord(this.recordSeletectedToDelete!).then(
+        (response) =>{
           this.invokeReport();
         },
-        error: e =>{
+        (e) =>{
           console.log("Delete request fail: ", e)
-        }
-      })
-    })
+        })
+    this.loading=false;
   }
 
   reloadPage(event?: boolean){
     if(event){
-      this.invokeReport();
-      this.recordSelected = undefined;
+      this.invokeReport();      
     }
+
+    this.recordSelected = undefined;
   }
 
 }

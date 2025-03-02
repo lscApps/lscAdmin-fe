@@ -26,6 +26,8 @@ export class RercordFormComponent implements OnInit{
 
   @Output() recordChangeEvent = new EventEmitter<boolean>();
 
+  loading:boolean = false;
+
   editMode = false;
 
   message: string = "";
@@ -178,19 +180,20 @@ export class RercordFormComponent implements OnInit{
   }
 
 
-  saveRecords(){
+  async saveRecords(){
+    this.loading = true;
     console.log(this.recordsNotSaved)
-    this.recordService.addRecords(this.recordsNotSaved).subscribe({
-      next:(n) => {
+    await this.recordService.addRecords(this.recordsNotSaved).then(
+      n => {
         this.recordsNotSaved = [];
         this.showAlert("All records saved!", true)
       },
-      error: e =>{
+      e =>{
         console.error("Failed: ", e)
         this.showAlert("FAIL - Submition to save records fail.", false)
       }
-
-    });
+    );
+    this.loading = false;
   }
 
   cancel(){
