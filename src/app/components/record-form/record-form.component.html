@@ -1,3 +1,5 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
+
 <div class="fixed-bottom start-0 w-100 " role="alert" [ngClass]="{'fade': !showingAlert, 'z-3 show': showingAlert}"
     *ngIf="!editMode">
     <div class="alert text-center" [ngClass]="{'alert-success': alertSuccess, 'alert-danger': !alertSuccess}">

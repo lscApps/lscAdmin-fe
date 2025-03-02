@@ -27,7 +27,10 @@
 
                     <div class="mb-3">
                         <button type="submit" title="Login" [disabled]="loginForm.invalid"
-                            class="btn float-end btn-primary fw-bold">Login</button>
+                            class="form-control btn btn-primary fw-bold">
+                            <div class="spinner-border spinner-border-sm text-light float-start mt-1" role="status"
+                                *ngIf="loading"></div>Login
+                        </button>
                     </div>
                 </form>
             </div>

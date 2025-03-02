@@ -1,3 +1,4 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
 <div class="overlay" *ngIf="recordSelected">
     <div class="card position-absolute top-50 start-50 translate-middle w-66 opacity-100 z-3">
         <h5 class="card-header">Edit Record - "{{recordSelected.description}}"</h5>
@@ -48,9 +49,9 @@
 
 
     <div class="gap-3">
-        <button type="submit" title="Generate report" [disabled]="reportForm.invalid" class="w-100 btn "
-            [ngClass]="{'btn-primary':isManageble,  'btn-outline-primary': !isManageble}">{{isManageble?
-            "Search" : "Generate Report"}}</button>
+        <button type="submit" title="Generate report" [disabled]="reportForm.invalid"
+            class="w-100 btn btn-primary">{{isManageble? "Search" : "Generate Report"}}
+        </button>
     </div>
 
 </form>

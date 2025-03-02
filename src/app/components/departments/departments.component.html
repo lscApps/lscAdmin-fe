@@ -1,3 +1,4 @@
+<app-load-spinner *ngIf="loading"></app-load-spinner>
 <div class="card marginTop10">
     <div class="card-header fw-bold text-center">
         <h4>Departments Management</h4>
@@ -59,17 +60,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete Department</h5>
+                <h4 class="modal-title">Delete Department</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Comfirme department deletion?</p>
+                <p class="fw-bold fs-5">Comfirme department deletion?</p>
                 <p>{{departmentSelected?.name}}</p>
                 <p>{{departmentSelected?.manager}}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
                         class="bi bi-arrow-return-left"></i></button>
+
                 <button type="button" class="btn btn-primary" (click)="deleteDepartment()" data-bs-dismiss="modal"><i
                         class="bi bi-check-lg"></i></button>
             </div>

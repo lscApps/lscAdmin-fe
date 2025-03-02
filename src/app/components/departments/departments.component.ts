@@ -13,6 +13,7 @@ export class DepartmentsComponent {
   departmentForm: FormGroup;
   departmentList: Array<Department> = [];
   departmentSelected?: Department;
+  loading:boolean = false;
 
   constructor(private fb: FormBuilder, private departmentService: DepartmentService){
     this.departmentForm = this.startForm()
@@ -37,8 +38,8 @@ export class DepartmentsComponent {
     this.departmentForm = this.startForm();
   }
 
-  featchDepartments(){
-    this.departmentService.getAllDepartments().then(
+  async featchDepartments(){
+    await this.departmentService.getAllDepartments().then(
       response=>{
         console.log(response);
         this.departmentList = response;
@@ -49,7 +50,8 @@ export class DepartmentsComponent {
     );
   }
 
-  saveDepartament(){ 
+  async saveDepartament(){ 
+    this.loading = true;
     let newDepartment: Department = new Department(
       this.departmentForm.get('name')?.value,
       this.departmentForm.get('manager')?.value
@@ -67,7 +69,7 @@ export class DepartmentsComponent {
       promisse = this.departmentService.addDepartment(newDepartment);
     }
     
-    promisse!.then(
+    await promisse!.then(
         ()=>{
           this.featchDepartments();
           this.clean();
@@ -76,11 +78,15 @@ export class DepartmentsComponent {
           console.error(error.message)
         }
       )
+    
+    this.loading = false;
+
   }
 
 
-  deleteDepartment(){
-    this.departmentService.deleteDepartment(this.departmentSelected?.id!).then(
+  async deleteDepartment(){
+    this.loading = true;
+    await this.departmentService.deleteDepartment(this.departmentSelected?.id!).then(
       ()=>{
         this.featchDepartments();
         this.clean();
@@ -89,6 +95,7 @@ export class DepartmentsComponent {
         console.error(error.message)
       }
     )
+    this.loading = false;
   }
 
 

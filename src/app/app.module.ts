@@ -13,13 +13,14 @@ import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/h
 import { RecordManagerComponent } from './components/record-manager/record-manager.component';
 import { LoginComponent } from './components/login/login.component';
 import { DepartmentsComponent } from './components/departments/departments.component';
+import { LoadSpinnerComponent } from './components/load-spinner/load-spinner.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ReportsComponent,
-    RercordFormComponent, RecordManagerComponent, LoginComponent, DepartmentsComponent
+    RercordFormComponent, RecordManagerComponent, LoginComponent, DepartmentsComponent, LoadSpinnerComponent
   ],
   imports: [
     BrowserModule,
