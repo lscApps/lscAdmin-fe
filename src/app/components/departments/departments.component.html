@@ -4,7 +4,7 @@
         <h4>Departments Management</h4>
     </div>
     <div class="card-body">
-        <form [formGroup]="departmentForm" class="row g-3">
+        <form [formGroup]="departmentForm" (submit)="saveDepartament()" class="row g-3">
             <div class="input-group">
                 <label class="input-group-text" for="name"><i class="bi bi-info-square"></i></label>
                 <input type="text" class="form-control" placeholder="Set Department Name" formControlName="name"
@@ -17,25 +17,24 @@
                     maxlength="18"
                     [ngClass]="{'border-bottom border-danger':departmentForm.get('manager')?.invalid && departmentForm.get('manager')?.touched}" />
             </div>
+
+            <div class="gap-3">
+                <button type="submit" title="Insert" [disabled]="departmentForm.invalid"
+                    class="btn btn-outline-primary float-end"><i class="bi bi-floppy"></i></button>
+                <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
+                        class="bi bi-eraser"></i></button>
+            </div>
         </form>
-    </div>
-    <div class="card-footer text-body-secondary">
-        <div class="gap-3">
-            <button type="submit" title="Insert" [disabled]="departmentForm.invalid"
-                class="btn btn-outline-primary float-end" (click)="saveDepartament()"><i
-                    class="bi bi-floppy"></i></button>
-            <button type="button" title="Clean" class="btn btn-outline-danger float-end mr10" (click)="clean()"><i
-                    class="bi bi-eraser"></i></button>
-        </div>
     </div>
 </div>
 
-<table class="table table-Light table-striped table-hover mt-3" *ngIf="departmentList.length > 0">
+<table class="table table-Light table-hover mt-3" *ngIf="departmentList.length > 0">
     <thead>
         <tr class="fw-bold">
             <td>Id</td>
             <td class="text-center">Name</td>
             <td class="text-center">Manager</td>
+            <td class="text-end">Actions</td>
         </tr>
     </thead>
     <tbody class="table-group-divider">

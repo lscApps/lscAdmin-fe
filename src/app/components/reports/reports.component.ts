@@ -22,6 +22,9 @@ export class ReportsComponent implements OnInit{
   @Input() isManageble: boolean = false;
 
   loading:boolean = false;
+  
+  recordSelected?: Record;
+  recordSeletectedToDelete?: Record;
 
   recordList: Record[] =[];
   departmentList: Department[] = [];
@@ -31,6 +34,7 @@ export class ReportsComponent implements OnInit{
   totalIncome  = 0;
   totalExpense = 0;
   balance = 0;
+
 
   constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
     this.reportForm = this.startForm()
@@ -178,14 +182,10 @@ export class ReportsComponent implements OnInit{
     }
     return 
   }
-
-  recordSelected?: Record;
   
   editRecord(record: Record){
     this.recordSelected = record;   
   }
-
-  recordSeletectedToDelete?: Record;
 
   selectRecord(record: Record){
     this.recordSeletectedToDelete = record;
@@ -205,9 +205,10 @@ export class ReportsComponent implements OnInit{
 
   reloadPage(event?: boolean){
     if(event){
-      this.invokeReport();
-      this.recordSelected = undefined;
+      this.invokeReport();      
     }
+
+    this.recordSelected = undefined;
   }
 
 }

@@ -14,20 +14,18 @@
 
                 <form [formGroup]="loginForm" (ngSubmit)="login()" class="row g-3">
                     <div class="mb-3">
-                        <!-- <label for="username" class="form-label"></label> -->
                         <input type="text" class="form-control" placeholder="Username" id="username"
                             formControlName="username">
                     </div>
 
                     <div class="mb-3">
-                        <!-- <label for="password" class="form-label">Password</label> -->
                         <input type="password" class="form-control" placeholder="Password" id="password"
                             formControlName="password">
                     </div>
 
                     <div class="mb-3">
                         <button type="submit" title="Login" [disabled]="loginForm.invalid"
-                            class="form-control btn btn-primary fw-bold">
+                            class="btn btn-primary fw-bold w-100">
                             <div class="spinner-border spinner-border-sm text-light float-start mt-1" role="status"
                                 *ngIf="loading"></div>Login
                         </button>
