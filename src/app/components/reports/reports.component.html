@@ -1,15 +1,25 @@
 <app-load-spinner *ngIf="loading"></app-load-spinner>
+
+<div class="position-fixed bottom-0 end-0 m-3 z-3 d-inline-grid">
+    <button type="button" title="Export PDF report" (click)="exportReport('pdf')"
+        class="btn btn-danger  rounded-circle  border-0 mb-1" *ngIf="!isManageble && recordList.length > 0"><i
+            class="bi bi-filetype-pdf big-icon"></i></button>
+
+    <button type="button" title="Export XLS report" (click)="exportReport()"
+        class="btn btn-success btn-lg rounded-circle border-0" *ngIf="!isManageble && recordList.length > 0"><i
+            class="bi bi-filetype-xls big-icon"></i></button>
+
+</div>
+
+
 <div class="overlay" *ngIf="recordSelected">
     <div class="card position-absolute top-50 start-50 translate-middle w-66 opacity-100 z-3">
         <app-record-form [record]="recordSelected" (recordChangeEvent)="reloadPage($event)"></app-record-form>
     </div>
 </div>
 <div class="card marginTop10">
-    <div class="card-header fw-bold text-center">
-        <h4 class="text-center">{{isManageble?"Record Management":"Reports"}}
-            <button type="button" title="Export XLS" (click)="exportExcel()" class="btn btn-success float-end"
-                *ngIf="!isManageble && recordList.length > 0"><i class="bi bi-filetype-xls"></i></button>
-        </h4>
+    <div class="card-header fw-bold">
+        <h4 class="text-center w-100">{{isManageble?"Record Management":"Reports"}}</h4>
     </div>
     <div class="card-body">
         <form [formGroup]="reportForm" (ngSubmit)="invokeReport()" class="row g-3 marginTop10">

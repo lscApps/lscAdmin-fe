@@ -4,6 +4,8 @@ import { Record } from '../../models/record';
 import { HttpClient, HttpHeaders, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { catchError, firstValueFrom, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ReportRequest } from '../../models/report-request';
+import { Constants } from '../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -25,22 +27,22 @@ export class RecordService {
     return await firstValueFrom(this.http.post<Array<Record>>(this.apiUrl, records));
   }
 
-  async getRecordsByRange(dtInit: string, dtEnd: string): Promise<Array<Record>>{
+  async getRecordsByRange(dtInit: string, dtEnd: string): Promise<ReportRequest>{
     const params = new HttpParams()
       .set('dtInit', dtInit)
       .set('dtEnd', dtEnd)
 
-    return await firstValueFrom(this.http.get<Array<Record>>(this.apiUrl, {params}));
+    return await firstValueFrom(this.http.get<ReportRequest>(this.apiUrl, {params}));
   }
 
-  async getMonthlyRecords(year: string, month: string): Promise<Array<Record>>{
+  async getMonthlyRecords(year: string, month: string): Promise<ReportRequest>{
     let url = `${this.apiUrl}/${year}/${month}`
-    return await firstValueFrom(this.http.get<Array<Record>>(url));
+    return await firstValueFrom(this.http.get<ReportRequest>(url));
   }
 
-  async getAnualRecords(year: string):Promise<Array<Record>>{
+  async getAnualRecords(year: string):Promise<ReportRequest>{
     let url = `${this.apiUrl}/${year}`
-    return await firstValueFrom(this.http.get<Array<Record>>(url));
+    return await firstValueFrom(this.http.get<ReportRequest>(url));
   }
 
   async getRecurrentRecords():Promise<Array<Record>>{
@@ -48,10 +50,20 @@ export class RecordService {
     return await firstValueFrom(this.http.get<Array<Record>>(url));
   }
 
-  async exportAsXls(records: Array<Record>):Promise<Blob>{
-    let url = `${this.apiUrl}/excel`
+  //Types = 'pdf' or 'excel'
+  async exportReport(reportRequest: ReportRequest):Promise<Blob>{
+    let url = `${this.apiUrl}/${reportRequest.type}`;
 
-    return await firstValueFrom(this.http.post(url, records, {responseType: 'blob'}));
+    let pdfRequestBody = {
+      records : reportRequest.records,
+      dtInit: reportRequest.dtInit,
+      dtEnd: reportRequest.dtEnd
+    };
+
+    let requestBody =  reportRequest.type == Constants.PDF ? pdfRequestBody : reportRequest.records;
+    
+
+    return await firstValueFrom(this.http.post(url, requestBody, {responseType: 'blob'}));
   }
 
   async deleteRecord(record: Record){
