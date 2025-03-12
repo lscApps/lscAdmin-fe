@@ -1,3 +1,4 @@
+import { ReportRequest } from './../../models/report-request';
 import { RecordService } from './../../services/record/record.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Record } from '../../models/record';
@@ -10,6 +11,7 @@ import { Month } from '../../enums/month';
 import { DepartmentService } from '../../services/department/department.service';
 import { Department } from '../../models/department';
 import { RecurrentType } from '../../enums/recurent_type';
+import { Constants } from '../../constants';
 
 @Component({
   selector: 'app-reports',
@@ -34,6 +36,8 @@ export class ReportsComponent implements OnInit{
   totalIncome  = 0;
   totalExpense = 0;
   balance = 0;
+
+  reportRequest?: ReportRequest;
 
 
   constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
@@ -113,12 +117,16 @@ export class ReportsComponent implements OnInit{
     this.balance = this.totalIncome - this.totalExpense;
   }
 
+  setDataReport(response: ReportRequest){
+    this.reportRequest = response;
+    this.recordList = response.records!;
+    this.calculateInOut();
+  }
+
   async getAnualReport(){
     await this.recordService.getAnualRecords(this.reportForm.get('yearSelected')?.value).then(
-      (n) =>{
-        console.log(n);
-        this.recordList = n;
-        this.calculateInOut();
+      (response) =>{
+        this.setDataReport(response);
       },
       e =>{
         console.log("HTTP REQUEST FAIL: ", e)
@@ -130,9 +138,8 @@ export class ReportsComponent implements OnInit{
     let year = this.reportForm.get('yearSelected')?.value
     let month = this.reportForm.get('monthSelected')?.value
     await this.recordService.getMonthlyRecords(year, month).then(
-      (n) =>{
-        this.recordList = n;
-        this.calculateInOut();
+      (response) =>{
+        this.setDataReport(response);
       },
       e =>{
         console.log("HTTP REQUEST FAIL: ", e)
@@ -143,10 +150,8 @@ export class ReportsComponent implements OnInit{
     let dtInit: string = this.reportForm.get('dtInit')?.value
     let dtEnd: string = this.reportForm.get('dtEnd')?.value
     await this.recordService.getRecordsByRange(dtInit, dtEnd).then(
-      (n) =>{
-        console.log(n);
-        this.recordList = n;
-        this.calculateInOut();
+      (response) =>{
+        this.setDataReport(response);
       },
       (e) =>{
         console.log("HTTP REQUEST FAIL: ", e)
@@ -155,16 +160,24 @@ export class ReportsComponent implements OnInit{
 
   }
 
+
+
   //TODO: Create a component to export files
-  async exportExcel(){
+  async exportReport(type:string = Constants.EXCEL){
     this.loading=true;
-    await this.recordService.exportAsXls(this.recordList).then((blob) =>{
+    // let reportRequestDTO: ReportRequest = new ReportRequest(this.recordList, )
+    this.reportRequest!.type = type;
+
+
+    await this.recordService.exportReport(this.reportRequest!).then((blob) =>{
       const url = window.URL.createObjectURL(blob);
+      const now = new Date().getTime();
+      const fileName: string = type === "excel" ? `${now}_lscAdminReport.xls` : `${now}_lscAdminReport.pdf`;
 
       // Criando um link temporário
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'records.xls'; // Nome do arquivo
+      a.download = fileName; 
       document.body.appendChild(a);
       a.click();
 

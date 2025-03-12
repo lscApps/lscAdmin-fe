@@ -48,3 +48,7 @@ a{
     font-size: 24px;
     z-index: 1000; /* Garante que fique acima de outros elementos */
   }
+
+  .big-icon{
+    font-size: 2rem !important;
+  }
