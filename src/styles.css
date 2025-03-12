@@ -34,6 +34,10 @@ a{
     box-shadow: 0 0.5rem 1rem rgba(255, 0, 0, 0.35); /* Red shadow */
 }
 
+.green-shadow {
+    box-shadow: 0 0.5rem 1rem rgba(8, 214, 77, 0.35); /* Red shadow */
+}
+
 .overlay {
     position: fixed; /* Fixa a div na tela */
     top: 0;
