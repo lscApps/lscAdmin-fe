@@ -49,6 +49,10 @@ export class AuthService {
     return this.loggedUser;
   }
 
+  getToken(){
+    return this.loggedUser!.getToken();
+  }
+
   isAuthenticated(): boolean {
     this.router.events.subscribe(event => {
           if (event instanceof NavigationEnd) {
