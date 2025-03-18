@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:8081/lscAdmim/api',
+    apiUrl: 'http://localhost:8081/lscAdmin/api',
     appName: 'lscAdmin'
   };
