@@ -47,9 +47,7 @@ export class ReportsComponent implements OnInit{
   
   ngOnInit(): void {
     this.featchDepartments();
-    this.reportTypeList = ReportType.getAll();
-
-    
+    this.reportTypeList = ReportType.getAll();    
   }
 
   featchDepartments(){
@@ -83,19 +81,15 @@ export class ReportsComponent implements OnInit{
 
   async invokeReport(){
     this.loading=true;
-    console.log('Invoking Report: ', this.reportForm.get('reportType')?.value);
     let reportId = Number.parseInt(this.reportForm.get('reportType')?.value);
     switch(reportId){
       case ReportType.ANUAL.id:
-        console.log('Not implemented');
         await this.getAnualReport();
         break;
       case ReportType.MONTHLY.id:
-        console.log('Invoking Monthly report');
         await this.getMonthlyReport();
         break;
-      case ReportType.CUSTOM.id:
-        console.log('Invoking CUSTOM');        
+      case ReportType.CUSTOM.id:       
         await this.getReportByRange();
         break;
     }

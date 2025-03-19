@@ -20,7 +20,6 @@ export class AuthService {
 
 
   async login(user: User){
-    let userFound = true;
     let url = `${this.apiUrl}/login`;
     await firstValueFrom(this.http.post<User>(url, user)).then(
      response =>{ 

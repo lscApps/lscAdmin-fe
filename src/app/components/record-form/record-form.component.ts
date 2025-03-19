@@ -1,9 +1,7 @@
-import { HttpStatusCode } from '@angular/common/http';
 import { DepartmentService } from '../../services/department/department.service';
-import { Component, EventEmitter, Input, input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Record } from '../../models/record';
-import { AbstractControl, ReactiveFormsModule, FormControl, FormsModule, ValidationErrors, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { AbstractControl, FormControl, ValidationErrors, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RecordService } from '../../services/record/record.service';
 import { parse, isValid, format } from 'date-fns';
 import { delay, Observable, of } from 'rxjs';
@@ -55,10 +53,7 @@ export class RercordFormComponent implements OnInit{
   ngOnInit(): void {
     //TODO: Need create a page to handle Departments
     this.authService.isAuthenticated();
-    this.getDepartments();
-    
-    console.log(this.departments)
-    
+    this.getDepartments();    
     if(this.record){
       this.setRecordForm(this.record);
       this.editMode = true;
@@ -69,7 +64,6 @@ export class RercordFormComponent implements OnInit{
   getDepartments(){
     this.departmentService.getAllDepartments().then(
       response=>{
-        console.log(response);
         this.departments = response;
       },
        e =>{
@@ -182,7 +176,6 @@ export class RercordFormComponent implements OnInit{
 
   async saveRecords(){
     this.loading = true;
-    console.log(this.recordsNotSaved)
     await this.recordService.addRecords(this.recordsNotSaved).then(
       n => {
         this.recordsNotSaved = [];

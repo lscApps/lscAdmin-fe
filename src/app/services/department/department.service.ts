@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SelectItem } from '../../models/selectItem';
 import { Department } from '../../models/department';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../login/auth.service';
 
 @Injectable({
