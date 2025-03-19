@@ -1,3 +1,4 @@
+import { AuthService } from './../login/auth.service';
 import { Month } from './../../enums/month';
 import { Injectable } from '@angular/core';
 import { Record } from '../../models/record';
@@ -13,36 +14,45 @@ import { Constants } from '../../constants';
 export class RecordService {
 
   private apiUrl = `${environment.apiUrl}/record`;
+  private options;
 
   constructor(
     private http: HttpClient,
-  ) {}
+    private authService: AuthService
+  ) {
+    this.options = authService.getAuthorizationHeader();
+  }
 
 
   async updateRecord(record: Record){
-    return await firstValueFrom(this.http.put(this.apiUrl, record));
+    return await firstValueFrom(this.http.put(this.apiUrl, record, this.options));
   }
 
   async addRecords(records: Array<Record>): Promise<Array<Record>> {
-    return await firstValueFrom(this.http.post<Array<Record>>(this.apiUrl, records));
+    return await firstValueFrom(this.http.post<Array<Record>>(this.apiUrl, records, this.options));
   }
 
   async getRecordsByRange(dtInit: string, dtEnd: string): Promise<ReportRequest>{
-    const params = new HttpParams()
-      .set('dtInit', dtInit)
-      .set('dtEnd', dtEnd)
+    let params= new HttpParams()
+    .set('dtInit', dtInit)
+    .set('dtEnd', dtEnd)
 
-    return await firstValueFrom(this.http.get<ReportRequest>(this.apiUrl, {params}));
+    const options = {
+      ...this.options,
+      params
+    }
+
+    return await firstValueFrom(this.http.get<ReportRequest>(this.apiUrl, options));
   }
 
   async getMonthlyRecords(year: string, month: string): Promise<ReportRequest>{
-    let url = `${this.apiUrl}/${year}/${month}`
-    return await firstValueFrom(this.http.get<ReportRequest>(url));
+    let url = `${this.apiUrl}/${year}/${month}`;
+    return await firstValueFrom(this.http.get<ReportRequest>(url, this.options));
   }
 
-  async getAnualRecords(year: string):Promise<ReportRequest>{
-    let url = `${this.apiUrl}/${year}`
-    return await firstValueFrom(this.http.get<ReportRequest>(url));
+  async getAnualRecords(year: string): Promise<ReportRequest>{
+    let url = `${this.apiUrl}/${year}`;
+    return await firstValueFrom(this.http.get<ReportRequest>(url, this.options));
   }
 
   async getRecurrentRecords():Promise<Array<Record>>{
@@ -62,13 +72,18 @@ export class RecordService {
 
     let requestBody =  reportRequest.type == Constants.PDF ? pdfRequestBody : reportRequest.records;
     
+    const responseType: 'json' | 'text' | 'blob' = 'blob';
+    const options = {
+      ...this.options,
+      responseType: responseType
+    }
 
-    return await firstValueFrom(this.http.post(url, requestBody, {responseType: 'blob'}));
+    return await firstValueFrom(this.http.post(url, requestBody, options));
   }
 
   async deleteRecord(record: Record){
     let url = `${this.apiUrl}/${record.id}`
-    return await firstValueFrom(this.http.delete(url));
+    return await firstValueFrom(this.http.delete(url, this.options));
   }
 
 }

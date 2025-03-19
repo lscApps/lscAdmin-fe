@@ -3,7 +3,7 @@ import { Injectable} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { User } from '../../models/user';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +36,6 @@ export class AuthService {
     return this.authenticator;    
   }; 
 
-  async invokeLogin(user: User){
-    
-  }
 
   logout() {
     this.authenticator = false;
@@ -50,7 +47,18 @@ export class AuthService {
   }
 
   getToken(){
-    return this.loggedUser!.getToken();
+    return this.loggedUser ? this.loggedUser.token : undefined;
+  }
+
+  getAuthorizationHeader(){
+    const httpHeaders = new HttpHeaders({
+          Authorization: `Bearer ${this.getToken()}`          
+        });
+
+    return {
+      headers: httpHeaders,
+      withCredentials: true
+    }
   }
 
   isAuthenticated(): boolean {
