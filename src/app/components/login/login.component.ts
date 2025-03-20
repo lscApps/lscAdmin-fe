@@ -34,10 +34,8 @@ export class LoginComponent implements OnInit{
     let loginSuccess: boolean = await this.authService.login(this.user);
     
     if(loginSuccess){
-        console.log('Login success')
         this.router.navigate(['/records'])
     }else{
-      console.log('Login failed')
       this.showAlert();
     }
     this.loading=false;

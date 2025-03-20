@@ -1,9 +1,7 @@
-import { HttpStatusCode } from '@angular/common/http';
 import { DepartmentService } from '../../services/department/department.service';
-import { Component, EventEmitter, Input, input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Record } from '../../models/record';
-import { AbstractControl, ReactiveFormsModule, FormControl, FormsModule, ValidationErrors, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { AbstractControl, FormControl, ValidationErrors, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RecordService } from '../../services/record/record.service';
 import { parse, isValid, format } from 'date-fns';
 import { delay, Observable, of } from 'rxjs';
@@ -55,10 +53,7 @@ export class RercordFormComponent implements OnInit{
   ngOnInit(): void {
     //TODO: Need create a page to handle Departments
     this.authService.isAuthenticated();
-    this.getDepartments();
-    
-    console.log(this.departments)
-    
+    this.getDepartments();    
     if(this.record){
       this.setRecordForm(this.record);
       this.editMode = true;
@@ -69,7 +64,6 @@ export class RercordFormComponent implements OnInit{
   getDepartments(){
     this.departmentService.getAllDepartments().then(
       response=>{
-        console.log(response);
         this.departments = response;
       },
        e =>{
@@ -100,6 +94,10 @@ export class RercordFormComponent implements OnInit{
       }
       else{
         this.recordsNotSaved.push(record);
+
+        if(record.recurringCount != undefined && record.recurringCount > 1){
+          this.duplicateRecord(record);
+        }
       }
 
       if(this.editMode){
@@ -115,6 +113,21 @@ export class RercordFormComponent implements OnInit{
 
     }
   }
+
+  duplicateRecord(original: Record){
+    for(let i=0; i < (original.recurringCount! - 1); i++){      
+      let newRecord: Record = {...original}
+      newRecord.date = this.calculateDateTarget(original, i)
+      this.recordsNotSaved.push(newRecord);
+    }
+  }
+
+  calculateDateTarget(original: Record, counter: number){
+    const [day, month, year] = original.date.split("/").map(Number);
+    let monthTarget = month + counter;
+    return format(new Date(year, monthTarget, day), 'dd/MM/yyyy');
+  }
+
 
   //TODO: Need create a component for alerts
   showAlert(message: string, success: boolean){
@@ -182,7 +195,6 @@ export class RercordFormComponent implements OnInit{
 
   async saveRecords(){
     this.loading = true;
-    console.log(this.recordsNotSaved)
     await this.recordService.addRecords(this.recordsNotSaved).then(
       n => {
         this.recordsNotSaved = [];

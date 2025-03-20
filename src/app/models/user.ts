@@ -1,6 +1,7 @@
 export class User{
     username?: string;
     password?: string;
+    token?: string;
 
     constructor(
         username: string,
@@ -16,5 +17,9 @@ export class User{
 
     getPassword(){
         return this.password;
+    }
+
+    getToken(){
+        return this.token;
     }
 }
