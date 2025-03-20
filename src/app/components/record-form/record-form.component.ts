@@ -94,6 +94,10 @@ export class RercordFormComponent implements OnInit{
       }
       else{
         this.recordsNotSaved.push(record);
+
+        if(record.recurringCount != undefined && record.recurringCount > 1){
+          this.duplicateRecord(record);
+        }
       }
 
       if(this.editMode){
@@ -109,6 +113,21 @@ export class RercordFormComponent implements OnInit{
 
     }
   }
+
+  duplicateRecord(original: Record){
+    for(let i=0; i < (original.recurringCount! - 1); i++){      
+      let newRecord: Record = {...original}
+      newRecord.date = this.calculateDateTarget(original, i)
+      this.recordsNotSaved.push(newRecord);
+    }
+  }
+
+  calculateDateTarget(original: Record, counter: number){
+    const [day, month, year] = original.date.split("/").map(Number);
+    let monthTarget = month + counter;
+    return format(new Date(year, monthTarget, day), 'dd/MM/yyyy');
+  }
+
 
   //TODO: Need create a component for alerts
   showAlert(message: string, success: boolean){

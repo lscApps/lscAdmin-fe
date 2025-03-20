@@ -2,7 +2,7 @@ import { SelectItem } from "../models/selectItem"
 
 export class RecurrentType{
     static FIXED: SelectItem = {id: 1, name: "Fixed"};
-    static INSTALLMENT: SelectItem = {id: 2, name: "Installemnt"};
+    static INSTALLMENT: SelectItem = {id: 2, name: "Installment"};
 
 
     static getAll(){
