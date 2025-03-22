@@ -40,7 +40,7 @@ export class ReportsComponent implements OnInit{
   reportRequest?: ReportRequest;
 
 
-  constructor(private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
+  constructor(public recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
     this.reportForm = this.startForm()
     this.months = Month.getAll()
   } 
@@ -60,15 +60,7 @@ export class ReportsComponent implements OnInit{
       }
     );
   }
-
-  getRecordType(record: Record){
-    if(record.recordType == RecordType.RECURRING.id){
-      return RecurrentType.getById(record.recurringType)?.name;
-    }
-
-    return RecordType.getById(record.recordType)?.name;
-  }
-
+  
   startForm(){
       return this.fb.group({
         reportType: [0, [Validators.required, Validators.min(1)]],

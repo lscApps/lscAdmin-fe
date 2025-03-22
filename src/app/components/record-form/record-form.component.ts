@@ -46,7 +46,8 @@ export class RercordFormComponent implements OnInit{
   editIndex: number = -1;
   recordsNotSaved: Array<Record> =[];
 
-  constructor(private authService: AuthService, private recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder){
+  constructor(private authService: AuthService, public recordService: RecordService, private departmentService: DepartmentService, private fb: FormBuilder
+  ){
    this.recordForm = this.startForm()
   }
 

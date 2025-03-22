@@ -6,6 +6,8 @@ import { firstValueFrom} from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ReportRequest } from '../../models/report-request';
 import { Constants } from '../../constants';
+import { RecordType } from '../../enums/record_type';
+import { RecurrentType } from '../../enums/recurent_type';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +85,14 @@ export class RecordService {
   async deleteRecord(record: Record){
     let url = `${this.apiUrl}/${record.id}`
     return await firstValueFrom(this.http.delete(url, this.options));
+  }
+
+  getRecordType(record: Record){
+    if(record.recordType == RecordType.RECURRING.id){
+      return RecurrentType.getById(record.recurringType)?.name;
+    }
+
+    return RecordType.getById(record.recordType)?.name;
   }
 
 }
