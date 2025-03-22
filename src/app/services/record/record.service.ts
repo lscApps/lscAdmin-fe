@@ -72,7 +72,7 @@ export class RecordService {
     };
 
     let requestBody =  reportRequest.type == Constants.PDF ? pdfRequestBody : reportRequest.records;
-    
+
     const responseType: 'json' | 'text' | 'blob' = 'blob';
     const options = {
       ...this.options,
